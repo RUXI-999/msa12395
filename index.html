@@ -1504,14 +1504,6 @@
         }
         
         function generatePDFPreview() {
-            if (typeof html2canvas === 'undefined' || typeof jsPDF === 'undefined') {
-                if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
-                    jsPDFClass = window.jspdf.jsPDF;
-                }
-                setTimeout(generatePDFPreview, 500);
-                return;
-            }
-            
             var jsPDFClass = null;
             if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
                 jsPDFClass = window.jspdf.jsPDF;
@@ -1519,8 +1511,8 @@
                 jsPDFClass = jsPDF;
             }
             
-            if (!jsPDFClass) {
-                document.getElementById('documentPreview').classList.remove('hidden');
+            if (typeof html2canvas === 'undefined' || !jsPDFClass) {
+                setTimeout(generatePDFPreview, 500);
                 return;
             }
             
@@ -1528,14 +1520,22 @@
             var pdfWidth = 210;
             var pdfHeight = 297;
             
+            element.classList.remove('hidden');
+            element.style.position = 'absolute';
+            element.style.left = '-9999px';
+            element.style.top = '0';
+            
             html2canvas(element, {
-                scale: 3,
+                scale: 2,
                 useCORS: true,
                 backgroundColor: '#ffffff',
-                logging: false,
-                width: element.scrollWidth,
-                height: element.scrollHeight
+                logging: false
             }).then(function(canvas) {
+                element.style.position = '';
+                element.style.left = '';
+                element.style.top = '';
+                element.classList.add('hidden');
+                
                 var imgData = canvas.toDataURL('image/png', 1.0);
                 var imgWidth = pdfWidth;
                 var imgHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -1545,14 +1545,7 @@
                 if (imgHeight <= pdfHeight) {
                     doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
                 } else {
-                    var position = 0;
-                    while (position < imgHeight) {
-                        doc.addImage(imgData, 'PNG', 0, -position, imgWidth, imgHeight);
-                        position += pdfHeight;
-                        if (position < imgHeight) {
-                            doc.addPage();
-                        }
-                    }
+                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
                 }
                 
                 var pdfBlob = doc.output('blob');
