@@ -101,11 +101,11 @@
             }
             
             .underline-half {
-                width: calc(50% - 40px);
+                width: calc(50% - 60px);
             }
             
             .underline-full {
-                width: calc(100% - 10px);
+                width: calc(100% - 100px);
             }
             
             .half-row {
@@ -411,11 +411,11 @@
         
         .underline-half {
             display: inline-block;
-            width: calc(50% - 60px);
+            width: calc(50% - 80px);
             text-align: center;
             border-bottom: 1px solid #000;
-            padding: 0 4px;
-            margin: 0 2px;
+            padding: 0 2px;
+            margin: 0;
             vertical-align: bottom;
         }
         
@@ -1290,10 +1290,10 @@
             if (formData.当班驾驶员 === '是') workUnitParts.push('当班驾驶员');
             var workUnit = workUnitParts.join('、');
             
-            document.getElementById('docInfo1').innerHTML = '<div class="info-row"><div class="info-item">说明人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.姓名 || '') + '</span></span></div><div class="info-item">与案件关系：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + identity + '</span></span></div></div>';
-            document.getElementById('docInfo2').innerHTML = '<div class="info-row"><div class="info-item">身份证号：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.身份证号 || '') + '</span></span></div><div class="info-item">联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.手机号 || '') + '</span></span></div></div>';
-            document.getElementById('docInfo3').innerHTML = '<div class="info-row"><span class="info-label">工作单位及职务：</span><span class="underline-full">' + (workUnit || '') + '</span></div>';
-            document.getElementById('docInfo4').innerHTML = '<div class="info-row"><span class="info-label">联系地址：</span><span class="underline-full">' + (formData.联系地址 || '') + '</span></div>';
+            document.getElementById('docInfo1').innerHTML = '说明人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.姓名 || '') + '</span></span>与案件关系：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + identity + '</span></span>';
+            document.getElementById('docInfo2').innerHTML = '身份证号：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.身份证号 || '') + '</span></span>联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.手机号 || '') + '</span></span>';
+            document.getElementById('docInfo3').innerHTML = '工作单位及职务：<span class="underline-full">' + (workUnit || '') + '</span>';
+            document.getElementById('docInfo4').innerHTML = '联系地址：<span class="underline-full">' + (formData.联系地址 || '') + '</span>';
             
             var 违法行为Text = formData.违法行为 || '';
             if (formData.违法行为 === '其他' && formData.违法行为其他) {
@@ -1380,8 +1380,8 @@
                 
                 deliveryInfo = '3.海事行政执法文书送达<br>';
                 deliveryInfo += '&emsp;&emsp;送达方式：直接送达' + directChecked + '电子送达' + electronicChecked + '其它' + otherChecked + (otherText ? '(' + otherText + ')' : '') + '<br>';
-                deliveryInfo += '<div class="info-row"><span class="info-label">&emsp;&emsp;送达地址：</span><span class="underline-full">' + deliveryAddress + '</span></div>';
-                deliveryInfo += '<div class="info-row"><div class="info-item">&emsp;&emsp;收件人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientName + '</span></span></div><div class="info-item">联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientPhone + '</span></span></div></div><br>';
+                deliveryInfo += '&emsp;&emsp;送达地址：<span class="underline-full">' + deliveryAddress + '</span><br>';
+                deliveryInfo += '&emsp;&emsp;收件人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientName + '</span></span>联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientPhone + '</span></span><br>';
                 deliveryInfo += '&emsp;&emsp;（相关送达信息若有变更将以书面形式告知海事管理机构）';
                 
                 document.getElementById('docItem3').innerHTML = deliveryInfo;
