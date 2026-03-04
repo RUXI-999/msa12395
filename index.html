@@ -107,11 +107,11 @@
             }
             
             .underline-half {
-                width: calc(50% - 60px);
+                min-width: 60px;
             }
             
             .underline-full {
-                width: calc(100% - 100px);
+                min-width: 150px;
             }
             
             .half-row {
@@ -406,24 +406,25 @@
             display: inline-block;
             text-align: center;
             border-bottom: 1px solid #000;
-            padding: 0 1px;
+            padding: 0 2px;
+            margin: 0;
+            vertical-align: bottom;
+            min-width: 40px;
+        }
+        
+        .underline-full {
+            display: inline-block;
+            min-width: 200px;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding: 0 4px;
             margin: 0;
             vertical-align: bottom;
         }
         
-        .underline-full {
-            display: block;
-            width: 100%;
-            text-align: center;
-            border-bottom: 1px solid #000;
-            padding: 0 4px;
-            margin: 0 2px;
-            margin-left: auto;
-        }
-        
         .underline-half {
             display: inline-block;
-            width: calc(50% - 80px);
+            min-width: 80px;
             text-align: center;
             border-bottom: 1px solid #000;
             padding: 0 2px;
@@ -1069,8 +1070,8 @@
         }
         
         function underline(text) {
-            if (!text) return '<span class="underline" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>';
-            return '<span class="underline" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;">' + text + '</span></span>';
+            if (!text) return '<span class="underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+            return '<span class="underline">' + text + '</span>';
         }
         
         function underlineHalf(text) {
@@ -1302,8 +1303,8 @@
             if (formData.当班驾驶员 === '是') workUnitParts.push('当班驾驶员');
             var workUnit = workUnitParts.join('、');
             
-            document.getElementById('docInfo1').innerHTML = '说明人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.姓名 || '') + '</span></span>与案件关系：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + identity + '</span></span>';
-            document.getElementById('docInfo2').innerHTML = '身份证号：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.身份证号 || '') + '</span></span>联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.手机号 || '') + '</span></span>';
+            document.getElementById('docInfo1').innerHTML = '说明人：<span class="underline-half">' + (formData.姓名 || '') + '</span>与案件关系：<span class="underline-half">' + identity + '</span>';
+            document.getElementById('docInfo2').innerHTML = '身份证号：<span class="underline-half">' + (formData.身份证号 || '') + '</span>联系电话：<span class="underline-half">' + (formData.手机号 || '') + '</span>';
             document.getElementById('docInfo3').innerHTML = '工作单位及职务：<span class="underline-full">' + (workUnit || '') + '</span>';
             document.getElementById('docInfo4').innerHTML = '联系地址：<span class="underline-full">' + (formData.联系地址 || '') + '</span>';
             
@@ -1393,7 +1394,7 @@
                 deliveryInfo = '3.海事行政执法文书送达<br>';
                 deliveryInfo += '&emsp;&emsp;送达方式：直接送达' + directChecked + '电子送达' + electronicChecked + '其它' + otherChecked + (otherText ? '(' + otherText + ')' : '') + '<br>';
                 deliveryInfo += '&emsp;&emsp;送达地址：<span class="underline-full">' + deliveryAddress + '</span><br>';
-                deliveryInfo += '&emsp;&emsp;收件人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientName + '</span></span>联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientPhone + '</span></span><br>';
+                deliveryInfo += '&emsp;&emsp;收件人：<span class="underline-half">' + recipientName + '</span>联系电话：<span class="underline-half">' + recipientPhone + '</span><br>';
                 deliveryInfo += '&emsp;&emsp;（相关送达信息若有变更将以书面形式告知海事管理机构）';
                 
                 document.getElementById('docItem3').innerHTML = deliveryInfo;
