@@ -137,6 +137,24 @@
                 max-width: 100px;
                 max-height: 40px;
             }
+            
+            .pdf-preview {
+                padding: 10px;
+            }
+            
+            .pdf-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .pdf-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .pdf-container iframe {
+                height: 400px;
+            }
         }
         
         body {
@@ -449,6 +467,46 @@
         
         .info-value {
             flex-grow: 1;
+        }
+        
+        .pdf-preview {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .pdf-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .pdf-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .pdf-container {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .pdf-container iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
         }
         
         .half-row {
@@ -915,11 +973,19 @@
             
             <div class="doc-signature" id="docSignature"></div>
             <div class="doc-date" id="docDate"></div>
-            
-            <div class="action-buttons">
-                <button class="btn btn-secondary" onclick="editForm()">返回修改</button>
-                <button class="btn btn-warning" onclick="downloadImage()">下载图片</button>
-                <button class="btn btn-success" onclick="downloadPDF()">下载PDF</button>
+        </div>
+        
+        <!-- PDF预览 -->
+        <div class="pdf-preview hidden" id="pdfPreview">
+            <div class="pdf-header">
+                <h3>文书预览</h3>
+                <div class="pdf-actions">
+                    <button class="btn btn-secondary" onclick="editForm()">返回修改</button>
+                    <button class="btn btn-success" onclick="downloadPDF()">下载PDF</button>
+                </div>
+            </div>
+            <div class="pdf-container">
+                <iframe id="pdfFrame" type="application/pdf"></iframe>
             </div>
         </div>
     </div>
@@ -1421,11 +1487,79 @@
             }
             document.querySelector('.step-indicator').classList.add('hidden');
             document.querySelector('.progress-bar').classList.add('hidden');
-            document.getElementById('documentPreview').classList.remove('hidden');
+            
+            generatePDFPreview();
+        }
+        
+        function generatePDFPreview() {
+            if (typeof html2canvas === 'undefined' || typeof jsPDF === 'undefined') {
+                if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
+                    jsPDFClass = window.jspdf.jsPDF;
+                }
+                setTimeout(generatePDFPreview, 500);
+                return;
+            }
+            
+            var jsPDFClass = null;
+            if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
+                jsPDFClass = window.jspdf.jsPDF;
+            } else if (typeof jsPDF !== 'undefined') {
+                jsPDFClass = jsPDF;
+            }
+            
+            if (!jsPDFClass) {
+                document.getElementById('documentPreview').classList.remove('hidden');
+                return;
+            }
+            
+            var element = document.getElementById('documentPreview');
+            var pdfWidth = 210;
+            var pdfHeight = 297;
+            
+            html2canvas(element, {
+                scale: 3,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                width: element.scrollWidth,
+                height: element.scrollHeight
+            }).then(function(canvas) {
+                var imgData = canvas.toDataURL('image/png', 1.0);
+                var imgWidth = pdfWidth;
+                var imgHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                var doc = new jsPDFClass('p', 'mm', 'a4');
+                
+                if (imgHeight <= pdfHeight) {
+                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                } else {
+                    var position = 0;
+                    while (position < imgHeight) {
+                        doc.addImage(imgData, 'PNG', 0, -position, imgWidth, imgHeight);
+                        position += pdfHeight;
+                        if (position < imgHeight) {
+                            doc.addPage();
+                        }
+                    }
+                }
+                
+                var pdfBlob = doc.output('blob');
+                var pdfUrl = URL.createObjectURL(pdfBlob);
+                
+                document.getElementById('pdfFrame').src = pdfUrl;
+                document.getElementById('documentPreview').classList.add('hidden');
+                document.getElementById('pdfPreview').classList.remove('hidden');
+                
+                window.currentPdfDoc = doc;
+            }).catch(function(err) {
+                console.error(err);
+                document.getElementById('documentPreview').classList.remove('hidden');
+            });
         }
         
         function editForm() {
             document.getElementById('documentPreview').classList.add('hidden');
+            document.getElementById('pdfPreview').classList.add('hidden');
             document.querySelector('.step-indicator').classList.remove('hidden');
             document.querySelector('.progress-bar').classList.remove('hidden');
             showSection(1);
@@ -1556,65 +1690,11 @@
         }
         
         function downloadPDF() {
-            if (typeof html2canvas === 'undefined') {
-                alert('PDF库正在加载中，请稍后再试');
-                return;
+            if (window.currentPdfDoc) {
+                window.currentPdfDoc.save('有关情况说明_' + new Date().getTime() + '.pdf');
+            } else {
+                alert('PDF正在生成中，请稍后再试');
             }
-            
-            var jsPDFClass = null;
-            if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
-                jsPDFClass = window.jspdf.jsPDF;
-            } else if (typeof jsPDF !== 'undefined') {
-                jsPDFClass = jsPDF;
-            }
-            
-            if (!jsPDFClass) {
-                alert('PDF库正在加载中，请稍后再试');
-                return;
-            }
-            
-            var element = document.getElementById('documentPreview');
-            var buttons = element.querySelector('.action-buttons');
-            var originalDisplay = buttons.style.display;
-            buttons.style.display = 'none';
-            
-            var pdfWidth = 210;
-            var pdfHeight = 297;
-            
-            html2canvas(element, {
-                scale: 3,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                width: element.scrollWidth,
-                height: element.scrollHeight
-            }).then(function(canvas) {
-                var imgData = canvas.toDataURL('image/png', 1.0);
-                var imgWidth = pdfWidth;
-                var imgHeight = (canvas.height * pdfWidth) / canvas.width;
-                
-                var doc = new jsPDFClass('p', 'mm', 'a4');
-                
-                if (imgHeight <= pdfHeight) {
-                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                } else {
-                    var position = 0;
-                    while (position < imgHeight) {
-                        doc.addImage(imgData, 'PNG', 0, -position, imgWidth, imgHeight);
-                        position += pdfHeight;
-                        if (position < imgHeight) {
-                            doc.addPage();
-                        }
-                    }
-                }
-                
-                doc.save('有关情况说明_' + new Date().getTime() + '.pdf');
-                buttons.style.display = originalDisplay || 'flex';
-            }).catch(function(err) {
-                console.error(err);
-                alert('生成PDF失败，请重试');
-                buttons.style.display = originalDisplay || 'flex';
-            });
         }
         
         function initTimePickers() {
