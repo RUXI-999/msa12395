@@ -75,6 +75,10 @@
                 min-width: 6em;
             }
             
+            .underline, .underline-half, .underline-full {
+                padding: 0 2px;
+            }
+            
             .btn {
                 padding: 12px 16px;
                 font-size: 14px;
@@ -437,25 +441,21 @@
         .underline {
             display: inline;
             border-bottom: 1px solid #000;
-            padding: 0 4px;
+            padding: 0 2px;
             margin: 0;
         }
         
         .underline-half {
-            display: inline-block;
-            min-width: 4em;
-            text-align: center;
+            display: inline;
             border-bottom: 1px solid #000;
-            padding: 0 2px;
+            padding: 0 4px;
             margin: 0;
         }
         
         .underline-full {
-            display: inline-block;
-            min-width: 8em;
-            text-align: center;
+            display: inline;
             border-bottom: 1px solid #000;
-            padding: 0 2px;
+            padding: 0 4px;
             margin: 0;
         }
         
@@ -1412,11 +1412,11 @@
             
             var 违法原因Text = '';
             if (formData.违法原因 === '忘记了') {
-                违法原因Text = '忘记了☑ 对相关规则不熟悉□ 其他原因：' + underline(formData.违法原因其他);
+                违法原因Text = '忘记了☑ 对相关规则不熟悉□ 其他原因：' + underline(formData.违法原因其他 || '');
             } else if (formData.违法原因 === '对相关规则不熟悉') {
-                违法原因Text = '忘记了□ 对相关规则不熟悉☑ 其他原因：' + underline(formData.违法原因其他);
+                违法原因Text = '忘记了□ 对相关规则不熟悉☑ 其他原因：' + underline(formData.违法原因其他 || '');
             } else if (formData.违法原因 === '其他原因') {
-                违法原因Text = '忘记了□ 对相关规则不熟悉□ 其他原因：' + underline(formData.违法原因其他) + ' ☑';
+                违法原因Text = '忘记了□ 对相关规则不熟悉□ 其他原因：' + underline(formData.违法原因其他 || '') + '☑';
             } else {
                 违法原因Text = '忘记了□ 对相关规则不熟悉□ 其他原因：' + underline('');
             }
