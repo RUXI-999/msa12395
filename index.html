@@ -40,7 +40,7 @@
             }
             
             .document-preview {
-                padding: 20px 15px;
+                padding: 15px;
                 font-size: 14pt;
                 width: 100%;
                 min-height: auto;
@@ -49,7 +49,7 @@
             
             .doc-title {
                 font-size: 18pt;
-                margin-bottom: 15px;
+                margin-bottom: 12pt;
                 line-height: 24pt;
             }
             
@@ -59,14 +59,20 @@
             }
             
             .doc-signature {
-                margin-top: 30px;
-                margin-right: 10px;
+                margin-top: 40pt;
                 line-height: 24pt;
             }
             
             .doc-date {
-                margin-right: 10px;
                 line-height: 24pt;
+            }
+            
+            .underline-half {
+                min-width: 3em;
+            }
+            
+            .underline-full {
+                min-width: 6em;
             }
             
             .btn {
@@ -374,28 +380,30 @@
         .document-preview {
             background: white;
             border-radius: 0;
-            padding: 72px 90px;
+            padding: 37mm 26mm 35mm 28mm;
             box-shadow: none;
-            font-family: 'FangSong', 'STFangsong', '仿宋', 'SimFang', serif;
+            font-family: 'FangSong', 'STFangsong', '仿宋', 'SimFang', 'FangSong_GB2312', serif;
             font-size: 16pt;
             line-height: 28pt;
             text-align: justify;
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
+            box-sizing: border-box;
         }
         
         .doc-title {
             text-align: center;
-            font-family: 'SimSun', '宋体', 'SimSun', serif;
+            font-family: 'SimSun', '宋体', 'STSong', serif;
             font-size: 22pt;
             font-weight: normal;
-            margin-bottom: 20px;
+            margin-bottom: 16pt;
             line-height: 28pt;
         }
         
         .doc-line {
-            margin-bottom: 0;
+            margin: 0;
+            padding: 0;
             text-indent: 2em;
             text-align: justify;
             line-height: 28pt;
@@ -405,73 +413,64 @@
             text-indent: 0;
         }
         
-        .doc-line + .doc-line {
-            margin-top: 0;
-        }
-        
         .doc-signature {
             text-align: right;
-            margin-top: 40px;
-            margin-right: 20px;
+            margin-top: 56pt;
+            padding-right: 0;
             line-height: 28pt;
         }
         
         .doc-date {
             text-align: right;
-            margin-top: 5px;
-            margin-right: 20px;
+            margin-top: 0;
+            padding-right: 0;
             line-height: 28pt;
         }
         
         .signature-img {
-            max-width: 120px;
-            max-height: 50px;
+            max-width: 100px;
+            max-height: 40px;
             vertical-align: bottom;
+            margin-left: 1em;
         }
         
         .underline {
-            display: inline-block;
-            text-align: center;
-            border-bottom: 1px solid #000;
-            padding: 0 2px;
-            margin: 0;
-            vertical-align: bottom;
-            min-width: 60px;
-        }
-        
-        .underline-full {
-            display: inline-block;
-            min-width: 200px;
-            text-align: center;
+            display: inline;
             border-bottom: 1px solid #000;
             padding: 0 4px;
             margin: 0;
-            vertical-align: bottom;
         }
         
         .underline-half {
             display: inline-block;
-            min-width: 80px;
+            min-width: 4em;
             text-align: center;
             border-bottom: 1px solid #000;
             padding: 0 2px;
             margin: 0;
-            vertical-align: bottom;
+        }
+        
+        .underline-full {
+            display: inline-block;
+            min-width: 8em;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding: 0 2px;
+            margin: 0;
         }
         
         .info-row {
-            display: flex;
-            align-items: baseline;
-            margin-bottom: 10px;
-            width: 100%;
+            margin: 0;
+            padding: 0;
+            line-height: 28pt;
         }
         
-        .info-label {
-            flex-shrink: 0;
+        .checkbox-checked {
+            font-family: 'SimSun', '宋体', serif;
         }
         
-        .info-value {
-            flex-grow: 1;
+        .checkbox-unchecked {
+            font-family: 'SimSun', '宋体', serif;
         }
         
         .pdf-preview {
@@ -993,6 +992,7 @@
                 <h3>文书预览</h3>
                 <div class="pdf-actions">
                     <button class="btn btn-secondary" onclick="editForm()">返回修改</button>
+                    <button class="btn btn-warning" onclick="downloadImage()">下载图片</button>
                     <button class="btn btn-success" onclick="downloadPDF()">下载PDF</button>
                 </div>
             </div>
@@ -1152,7 +1152,7 @@
         }
         
         function underline(text) {
-            if (!text) return '<span class="underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+            if (!text) text = '';
             return '<span class="underline">' + text + '</span>';
         }
         
@@ -1385,10 +1385,10 @@
             if (formData.当班驾驶员 === '是') workUnitParts.push('当班驾驶员');
             var workUnit = workUnitParts.join('、');
             
-            document.getElementById('docInfo1').innerHTML = '说明人：<span class="underline-half">' + (formData.姓名 || '') + '</span>与案件关系：<span class="underline-half">' + identity + '</span>';
-            document.getElementById('docInfo2').innerHTML = '身份证号：<span class="underline-half">' + (formData.身份证号 || '') + '</span>联系电话：<span class="underline-half">' + (formData.手机号 || '') + '</span>';
-            document.getElementById('docInfo3').innerHTML = '工作单位及职务：<span class="underline-full">' + (workUnit || '') + '</span>';
-            document.getElementById('docInfo4').innerHTML = '联系地址：<span class="underline-full">' + (formData.联系地址 || '') + '</span>';
+            document.getElementById('docInfo1').innerHTML = '说明人：' + underlineHalf(formData.姓名 || '') + '与案件关系：' + underlineHalf(identity);
+            document.getElementById('docInfo2').innerHTML = '身份证号：' + underlineHalf(formData.身份证号 || '') + '联系电话：' + underlineHalf(formData.手机号 || '');
+            document.getElementById('docInfo3').innerHTML = '工作单位及职务：' + underlineFull(workUnit || '');
+            document.getElementById('docInfo4').innerHTML = '联系地址：' + underlineFull(formData.联系地址 || '');
             
             var 违法行为Text = formData.违法行为 || '';
             if (formData.违法行为 === '其他' && formData.违法行为其他) {
@@ -1474,10 +1474,10 @@
                 var recipientPhone = formData.手机号 || '';
                 
                 deliveryInfo = '3.海事行政执法文书送达<br>';
-                deliveryInfo += '&emsp;&emsp;送达方式：直接送达' + directChecked + '电子送达' + electronicChecked + '其它' + otherChecked + (otherText ? '(' + otherText + ')' : '') + '<br>';
-                deliveryInfo += '&emsp;&emsp;送达地址：<span class="underline-full">' + deliveryAddress + '</span><br>';
-                deliveryInfo += '&emsp;&emsp;收件人：<span class="underline-half">' + recipientName + '</span>联系电话：<span class="underline-half">' + recipientPhone + '</span><br>';
-                deliveryInfo += '&emsp;&emsp;（相关送达信息若有变更将以书面形式告知海事管理机构）';
+                deliveryInfo += '送达方式：直接送达' + directChecked + '电子送达' + electronicChecked + '其它' + otherChecked + (otherText ? '(' + otherText + ')' : '') + '<br>';
+                deliveryInfo += '送达地址：' + underlineFull(deliveryAddress) + '<br>';
+                deliveryInfo += '收件人：' + underlineHalf(recipientName) + '联系电话：' + underlineHalf(recipientPhone) + '<br>';
+                deliveryInfo += '（相关送达信息若有变更将以书面形式告知海事管理机构）';
                 
                 document.getElementById('docItem3').innerHTML = deliveryInfo;
                 document.getElementById('docItem3').classList.remove('hidden');
@@ -1487,11 +1487,11 @@
             
             document.getElementById('docConclusion').textContent = '以上情况说明是出于我真实意思表示，愿意承担相应法律后果。';
             
-            var signatureHtml = '签字：<img src="' + signatureData + '" class="signature-img" />&emsp;&emsp;&emsp;&emsp;';
+            var signatureHtml = '签字：<img src="' + signatureData + '" class="signature-img" />';
             document.getElementById('docSignature').innerHTML = signatureHtml;
             
             var today = new Date();
-            var dateStr = today.getFullYear() + ' 年 ' + (today.getMonth() + 1) + ' 月 ' + today.getDate() + ' 日&emsp;&emsp;&emsp;&emsp;';
+            var dateStr = today.getFullYear() + ' 年 ' + (today.getMonth() + 1) + ' 月 ' + today.getDate() + ' 日';
             document.getElementById('docDate').innerHTML = dateStr;
             
             for (var i = 1; i <= totalSections; i++) {
@@ -1677,27 +1677,24 @@
             }
             
             var element = document.getElementById('documentPreview');
-            var buttons = element.querySelector('.action-buttons');
-            var originalDisplay = buttons.style.display;
-            buttons.style.display = 'none';
             
             html2canvas(element, {
-                scale: 2,
+                scale: 3,
                 useCORS: true,
                 backgroundColor: '#ffffff',
-                logging: false
+                logging: false,
+                width: element.scrollWidth,
+                height: element.scrollHeight
             }).then(function(canvas) {
                 var link = document.createElement('a');
                 link.download = '有关情况说明_' + new Date().getTime() + '.png';
-                link.href = canvas.toDataURL('image/png');
+                link.href = canvas.toDataURL('image/png', 1.0);
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                buttons.style.display = originalDisplay || 'flex';
             }).catch(function(err) {
                 console.error(err);
                 alert('生成图片失败，请重试');
-                buttons.style.display = originalDisplay || 'flex';
             });
         }
         
