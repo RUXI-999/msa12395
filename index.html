@@ -508,16 +508,27 @@
             line-height: 28pt;
         }
         
-        .checkbox-checked {
-            font-family: 'SimSun', '宋体', serif;
+        .checkbox {
             display: inline-block;
-            padding: 0 2px;
+            width: 14px;
+            height: 14px;
+            border: 1px solid #000;
+            vertical-align: middle;
+            margin: 0 2px;
+            position: relative;
+            box-sizing: border-box;
         }
         
-        .checkbox-unchecked {
-            font-family: 'SimSun', '宋体', serif;
-            display: inline-block;
-            padding: 0 2px;
+        .checkbox.checked::after {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 0px;
+            width: 4px;
+            height: 8px;
+            border: solid #000;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
         }
         
         .pdf-preview {
@@ -1559,29 +1570,29 @@
             var intro = '我在' + underline(formData.船名) + '轮上担任' + underline(职务Text) + '职务，本航次由' + underline(formData.起始港) + '港到' + underline(formData.目的港) + '港。' + underline(formData.违法时间) + '在' + underline(formData.违法地点) + 发现单位 + '，我船存在' + underline(违法行为Text) + '的违法行为。我当时在场，对当时的情况比较了解，现在有关情况说明如下：';
             document.getElementById('docIntro').innerHTML = intro;
             
-            var 船舶状态Checked = formData.船舶状态 === '航行' ? '☑' : '□';
-            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '☑' : '□';
+            var 船舶状态Checked = formData.船舶状态 === '航行' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
             
             var 违法原因Text = '';
             if (formData.违法原因 === '忘记了') {
-                违法原因Text = '忘记了☑对相关规则不熟悉□其他原因：' + underline(formData.违法原因其他 || '');
+                违法原因Text = '忘记了<span class="checkbox checked"></span>对相关规则不熟悉<span class="checkbox"></span>其他原因：' + underline(formData.违法原因其他 || '');
             } else if (formData.违法原因 === '对相关规则不熟悉') {
-                违法原因Text = '忘记了□对相关规则不熟悉☑其他原因：' + underline(formData.违法原因其他 || '');
+                违法原因Text = '忘记了<span class="checkbox"></span>对相关规则不熟悉<span class="checkbox checked"></span>其他原因：' + underline(formData.违法原因其他 || '');
             } else if (formData.违法原因 === '其他原因') {
-                违法原因Text = '忘记了□对相关规则不熟悉□其他原因：' + underline(formData.违法原因其他 || '') + '☑';
+                违法原因Text = '忘记了<span class="checkbox"></span>对相关规则不熟悉<span class="checkbox"></span>其他原因：' + underline(formData.违法原因其他 || '') + '<span class="checkbox checked"></span>';
             } else {
-                违法原因Text = '忘记了□对相关规则不熟悉□其他原因：' + underline('');
+                违法原因Text = '忘记了<span class="checkbox"></span>对相关规则不熟悉<span class="checkbox"></span>其他原因：' + underline('');
             }
             
-            var item1 = '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实☑不属实□，具体表现为：' + underline(违法行为Text) + '，原因是：' + 违法原因Text + '。';
+            var item1 = '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实<span class="checkbox checked"></span>不属实<span class="checkbox"></span>，具体表现为：' + underline(违法行为Text) + '，原因是：' + 违法原因Text + '。';
             document.getElementById('docItem1').innerHTML = item1;
             
-            var rightsReadChecked = formData.权利告知 === '已阅读' ? '☑' : '□';
-            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '☑' : '□';
-            var avoidChecked = formData.回避情形 === '存在' ? '☑' : '□';
-            var avoidUnchecked = formData.回避情形 === '不存在' ? '☑' : '□';
-            var defenseChecked = formData.陈述申辩 === '需要' ? '☑' : '□';
-            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '☑' : '□';
+            var rightsReadChecked = formData.权利告知 === '已阅读' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var avoidChecked = formData.回避情形 === '存在' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var avoidUnchecked = formData.回避情形 === '不存在' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var defenseChecked = formData.陈述申辩 === '需要' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
             
             var avoidDetail = '';
             if (formData.回避情形 === '存在' && formData.回避情形具体) {
@@ -1603,17 +1614,17 @@
             if (showDelivery || isOwnerElectronicDelivery) {
                 var deliveryInfo = '';
                 
-                var directChecked = '□';
-                var electronicChecked = '□';
-                var otherChecked = '□';
+                var directChecked = '<span class="checkbox"></span>';
+                var electronicChecked = '<span class="checkbox"></span>';
+                var otherChecked = '<span class="checkbox"></span>';
                 var otherText = '';
                 
                 if (isOwnerElectronicDelivery || isElectronicDelivery) {
-                    electronicChecked = '☑';
+                    electronicChecked = '<span class="checkbox checked"></span>';
                 } else if (formData.送达方式 === '直接送达') {
-                    directChecked = '☑';
+                    directChecked = '<span class="checkbox checked"></span>';
                 } else if (formData.送达方式 === '其他') {
-                    otherChecked = '☑';
+                    otherChecked = '<span class="checkbox checked"></span>';
                     otherText = formData.送达方式其他 || '';
                 }
                 
