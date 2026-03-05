@@ -1512,41 +1512,31 @@
             }
             
             if (typeof html2canvas === 'undefined' || !jsPDFClass) {
+                document.getElementById('documentPreview').classList.remove('hidden');
+                document.getElementById('pdfPreview').classList.add('hidden');
                 setTimeout(generatePDFPreview, 500);
                 return;
             }
             
             var element = document.getElementById('documentPreview');
-            var pdfWidth = 210;
-            var pdfHeight = 297;
-            
             element.classList.remove('hidden');
-            element.style.position = 'absolute';
-            element.style.left = '-9999px';
-            element.style.top = '0';
             
             html2canvas(element, {
                 scale: 2,
                 useCORS: true,
                 backgroundColor: '#ffffff',
-                logging: false
+                logging: false,
+                width: element.offsetWidth,
+                height: element.offsetHeight
             }).then(function(canvas) {
-                element.style.position = '';
-                element.style.left = '';
-                element.style.top = '';
-                element.classList.add('hidden');
-                
                 var imgData = canvas.toDataURL('image/png', 1.0);
-                var imgWidth = pdfWidth;
-                var imgHeight = (canvas.height * pdfWidth) / canvas.width;
+                var imgWidth = 210;
+                var imgHeight = (canvas.height * imgWidth) / canvas.width;
                 
                 var doc = new jsPDFClass('p', 'mm', 'a4');
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
                 
-                if (imgHeight <= pdfHeight) {
-                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                } else {
-                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                }
+                window.currentPdfDoc = doc;
                 
                 var pdfBlob = doc.output('blob');
                 var pdfUrl = URL.createObjectURL(pdfBlob);
@@ -1554,11 +1544,10 @@
                 document.getElementById('pdfFrame').src = pdfUrl;
                 document.getElementById('documentPreview').classList.add('hidden');
                 document.getElementById('pdfPreview').classList.remove('hidden');
-                
-                window.currentPdfDoc = doc;
             }).catch(function(err) {
                 console.error(err);
                 document.getElementById('documentPreview').classList.remove('hidden');
+                document.getElementById('pdfPreview').classList.add('hidden');
             });
         }
         
