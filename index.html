@@ -1035,6 +1035,7 @@
             <div class="doc-line no-indent" id="docInfo2"></div>
             <div class="doc-line no-indent" id="docInfo3"></div>
             <div class="doc-line no-indent" id="docInfo4"></div>
+            <div class="doc-line no-indent" id="docInfo5"></div>
             <div class="doc-line" id="docIntro"></div>
             <div class="doc-line" id="docItem1"></div>
             <div class="doc-line" id="docItem2"></div>
@@ -1532,9 +1533,10 @@
             var workUnit = workUnitParts.join('、');
             
             document.getElementById('docInfo1').innerHTML = '说明人：' + underlineHalf(formData.姓名 || '') + '与案件关系：' + underlineHalf(identity);
-            document.getElementById('docInfo2').innerHTML = '身份证号：' + underlineHalf(formData.身份证号 || '') + '联系电话：' + underlineHalf(formData.手机号 || '');
-            document.getElementById('docInfo3').innerHTML = '工作单位及职务：' + underlineFull(workUnit || '');
-            document.getElementById('docInfo4').innerHTML = '联系地址：' + underlineFull(formData.联系地址 || '');
+            document.getElementById('docInfo2').innerHTML = '身份证号：' + underlineFull(formData.身份证号 || '');
+            document.getElementById('docInfo3').innerHTML = '联系电话：' + underlineFull(formData.手机号 || '');
+            document.getElementById('docInfo4').innerHTML = '工作单位及职务：' + underlineFull(workUnit || '');
+            document.getElementById('docInfo5').innerHTML = '联系地址：' + underlineFull(formData.联系地址 || '');
             
             var 违法行为Text = formData.违法行为 || '';
             if (formData.违法行为 === '其他' && formData.违法行为其他) {
