@@ -294,6 +294,49 @@
             padding: 10px;
             text-align: center;
             width: 100%;
+            position: relative;
+        }
+        
+        .signature-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #fff;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .signature-fullscreen.hidden {
+            display: none;
+        }
+        
+        .signature-fullscreen canvas {
+            width: 95vw !important;
+            height: 60vh !important;
+            max-width: 800px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #fff;
+        }
+        
+        .signature-fullscreen-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .signature-fullscreen-buttons .btn {
+            padding: 15px 30px;
+            font-size: 16px;
         }
         
         #signaturePad {
@@ -303,7 +346,7 @@
             cursor: crosshair;
             touch-action: none;
             width: 100% !important;
-            height: 150px !important;
+            height: 200px !important;
             max-width: 100%;
         }
         
@@ -503,21 +546,26 @@
         .pdf-container {
             background: #fff;
             border-radius: 8px;
-            overflow: hidden;
+            overflow: auto;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px;
+            max-height: 80vh;
+        }
+        
+        .pdf-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee;
         }
         
         .pdf-container iframe {
             width: 100%;
             max-width: 210mm;
-            height: auto;
-            min-height: 500px;
+            height: 80vh;
             border: none;
-            aspect-ratio: 210 / 297;
         }
         
         .half-row {
@@ -955,9 +1003,10 @@
             <div class="form-group">
                 <label>请在下方签字确认<span class="required">*</span></label>
                 <div class="signature-container">
-                    <canvas id="signaturePad" width="400" height="150"></canvas>
+                    <canvas id="signaturePad" width="400" height="200"></canvas>
                     <div class="signature-buttons">
                         <button class="btn btn-secondary" onclick="clearSignature()">清除签名</button>
+                        <button class="btn btn-primary" onclick="openFullscreenSignature()">放大签字</button>
                     </div>
                 </div>
             </div>
@@ -965,6 +1014,16 @@
             <div class="navigation">
                 <button class="btn btn-secondary" onclick="prevSection(5)">上一步</button>
                 <button class="btn btn-success" onclick="generateDocument()">生成文书</button>
+            </div>
+        </div>
+        
+        <!-- 全屏签字 -->
+        <div class="signature-fullscreen hidden" id="fullscreenSignature">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">请在下方横屏签字</h3>
+            <canvas id="signaturePadFullscreen" width="800" height="400"></canvas>
+            <div class="signature-fullscreen-buttons">
+                <button class="btn btn-secondary" onclick="clearFullscreenSignature()">清除签名</button>
+                <button class="btn btn-success" onclick="confirmFullscreenSignature()">确认签字</button>
             </div>
         </div>
         
@@ -996,8 +1055,8 @@
                     <button class="btn btn-success" onclick="downloadPDF()">下载PDF</button>
                 </div>
             </div>
-            <div class="pdf-container">
-                <iframe id="pdfFrame" type="application/pdf"></iframe>
+            <div class="pdf-container" id="pdfContainer">
+                <img id="previewImage" src="" alt="文书预览" />
             </div>
         </div>
     </div>
@@ -1105,6 +1164,93 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
             signatureData = null;
+        }
+        
+        var fullscreenCanvas, fullscreenCtx;
+        var isDrawingFullscreen = false;
+        var lastXFullscreen = 0, lastYFullscreen = 0;
+        
+        function openFullscreenSignature() {
+            document.getElementById('fullscreenSignature').classList.remove('hidden');
+            fullscreenCanvas = document.getElementById('signaturePadFullscreen');
+            fullscreenCtx = fullscreenCanvas.getContext('2d');
+            fullscreenCtx.strokeStyle = '#000';
+            fullscreenCtx.lineWidth = 3;
+            fullscreenCtx.lineCap = 'round';
+            fullscreenCtx.lineJoin = 'round';
+            
+            fullscreenCanvas.addEventListener('mousedown', startDrawingFullscreen);
+            fullscreenCanvas.addEventListener('mousemove', drawFullscreen);
+            fullscreenCanvas.addEventListener('mouseup', stopDrawingFullscreen);
+            fullscreenCanvas.addEventListener('mouseout', stopDrawingFullscreen);
+            fullscreenCanvas.addEventListener('touchstart', handleTouchStartFullscreen);
+            fullscreenCanvas.addEventListener('touchmove', handleTouchMoveFullscreen);
+            fullscreenCanvas.addEventListener('touchend', stopDrawingFullscreen);
+        }
+        
+        function startDrawingFullscreen(e) {
+            isDrawingFullscreen = true;
+            var rect = fullscreenCanvas.getBoundingClientRect();
+            lastXFullscreen = (e.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
+            lastYFullscreen = (e.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
+        }
+        
+        function drawFullscreen(e) {
+            if (!isDrawingFullscreen) return;
+            var rect = fullscreenCanvas.getBoundingClientRect();
+            var x = (e.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
+            var y = (e.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
+            fullscreenCtx.beginPath();
+            fullscreenCtx.moveTo(lastXFullscreen, lastYFullscreen);
+            fullscreenCtx.lineTo(x, y);
+            fullscreenCtx.stroke();
+            lastXFullscreen = x;
+            lastYFullscreen = y;
+        }
+        
+        function stopDrawingFullscreen() {
+            isDrawingFullscreen = false;
+        }
+        
+        function handleTouchStartFullscreen(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = fullscreenCanvas.getBoundingClientRect();
+            isDrawingFullscreen = true;
+            lastXFullscreen = (touch.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
+            lastYFullscreen = (touch.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
+        }
+        
+        function handleTouchMoveFullscreen(e) {
+            e.preventDefault();
+            if (!isDrawingFullscreen) return;
+            const touch = e.touches[0];
+            const rect = fullscreenCanvas.getBoundingClientRect();
+            const x = (touch.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
+            const y = (touch.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
+            fullscreenCtx.beginPath();
+            fullscreenCtx.moveTo(lastXFullscreen, lastYFullscreen);
+            fullscreenCtx.lineTo(x, y);
+            fullscreenCtx.stroke();
+            lastXFullscreen = x;
+            lastYFullscreen = y;
+        }
+        
+        function clearFullscreenSignature() {
+            if (fullscreenCtx && fullscreenCanvas) {
+                fullscreenCtx.clearRect(0, 0, fullscreenCanvas.width, fullscreenCanvas.height);
+            }
+        }
+        
+        function confirmFullscreenSignature() {
+            signatureData = fullscreenCanvas.toDataURL();
+            var img = new Image();
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = signatureData;
+            document.getElementById('fullscreenSignature').classList.add('hidden');
         }
         
         function updateProgress() {
@@ -1530,6 +1676,9 @@
                 height: element.offsetHeight
             }).then(function(canvas) {
                 var imgData = canvas.toDataURL('image/png', 1.0);
+                
+                document.getElementById('previewImage').src = imgData;
+                
                 var imgWidth = 210;
                 var imgHeight = (canvas.height * imgWidth) / canvas.width;
                 
@@ -1537,11 +1686,8 @@
                 doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
                 
                 window.currentPdfDoc = doc;
+                window.currentCanvas = canvas;
                 
-                var pdfBlob = doc.output('blob');
-                var pdfUrl = URL.createObjectURL(pdfBlob);
-                
-                document.getElementById('pdfFrame').src = pdfUrl;
                 document.getElementById('documentPreview').classList.add('hidden');
                 document.getElementById('pdfPreview').classList.remove('hidden');
             }).catch(function(err) {
@@ -1653,31 +1799,16 @@
         }
         
         function downloadImage() {
-            if (typeof html2canvas === 'undefined') {
-                alert('图片库正在加载中，请稍后再试');
-                return;
-            }
-            
-            var element = document.getElementById('documentPreview');
-            
-            html2canvas(element, {
-                scale: 3,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                width: element.scrollWidth,
-                height: element.scrollHeight
-            }).then(function(canvas) {
+            if (window.currentCanvas) {
                 var link = document.createElement('a');
                 link.download = '有关情况说明_' + new Date().getTime() + '.png';
-                link.href = canvas.toDataURL('image/png', 1.0);
+                link.href = window.currentCanvas.toDataURL('image/png', 1.0);
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            }).catch(function(err) {
-                console.error(err);
-                alert('生成图片失败，请重试');
-            });
+            } else {
+                alert('图片正在生成中，请稍后再试');
+            }
         }
         
         function downloadPDF() {
