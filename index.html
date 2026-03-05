@@ -510,25 +510,18 @@
         
         .checkbox {
             display: inline-block;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border: 1px solid #000;
             vertical-align: middle;
-            margin: 0 2px;
-            position: relative;
-            box-sizing: border-box;
+            margin: 0 1px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
         
-        .checkbox.checked::after {
-            content: '';
-            position: absolute;
-            left: 3px;
-            top: 0px;
-            width: 4px;
-            height: 8px;
-            border: solid #000;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
+        .checkbox.checked {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-width='3' d='M4 12l5 5L20 5'/%3E%3C/svg%3E");
         }
         
         .pdf-preview {
