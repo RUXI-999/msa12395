@@ -510,10 +510,14 @@
         
         .checkbox-checked {
             font-family: 'SimSun', '宋体', serif;
+            display: inline-block;
+            padding: 0 2px;
         }
         
         .checkbox-unchecked {
             font-family: 'SimSun', '宋体', serif;
+            display: inline-block;
+            padding: 0 2px;
         }
         
         .pdf-preview {
@@ -1560,13 +1564,13 @@
             
             var 违法原因Text = '';
             if (formData.违法原因 === '忘记了') {
-                违法原因Text = '忘记了☑ 对相关规则不熟悉□ 其他原因：' + underline(formData.违法原因其他 || '');
+                违法原因Text = '忘记了☑对相关规则不熟悉□其他原因：' + underline(formData.违法原因其他 || '');
             } else if (formData.违法原因 === '对相关规则不熟悉') {
-                违法原因Text = '忘记了□ 对相关规则不熟悉☑ 其他原因：' + underline(formData.违法原因其他 || '');
+                违法原因Text = '忘记了□对相关规则不熟悉☑其他原因：' + underline(formData.违法原因其他 || '');
             } else if (formData.违法原因 === '其他原因') {
-                违法原因Text = '忘记了□ 对相关规则不熟悉□ 其他原因：' + underline(formData.违法原因其他 || '') + '☑';
+                违法原因Text = '忘记了□对相关规则不熟悉□其他原因：' + underline(formData.违法原因其他 || '') + '☑';
             } else {
-                违法原因Text = '忘记了□ 对相关规则不熟悉□ 其他原因：' + underline('');
+                违法原因Text = '忘记了□对相关规则不熟悉□其他原因：' + underline('');
             }
             
             var item1 = '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实☑不属实□，具体表现为：' + underline(违法行为Text) + '，原因是：' + 违法原因Text + '。';
