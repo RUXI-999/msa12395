@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>有关情况说明 - 表单测试</title>
+    <script src="libs/html2canvas.min.js"></script>
+    <script src="libs/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        input, textarea, select {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'SimSun', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #4CAF50;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group label .required {
+            color: #f44336;
+            margin-left: 4px;
+        }
+        
+        .form-group input[type="text"],
+        .form-group input[type="tel"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .radio-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .radio-item input[type="radio"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .radio-item input[type="radio"]:checked {
+            background: #667eea;
+            border-color: #667eea;
+        }
+        
+        .radio-item input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .signature-container {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        #signaturePad {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        
+        .signature-buttons {
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd6;
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #da190b;
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+        }
+        
+        .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e68900;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .document-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 37mm 26mm 35mm 28mm;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: 'FangSong', 'STFangsong', '仿宋', serif;
+            font-size: 16pt;
+            line-height: 28pt;
+            text-align: justify;
+        }
+        
+        .doc-title {
+            text-align: center;
+            font-family: 'SimSun', '宋体', serif;
+            font-size: 22pt;
+            font-weight: bold;
+            margin-bottom: 30pt;
+        }
+        
+        .doc-line {
+            margin-bottom: 0;
+            text-indent: 2em;
+            text-align: justify;
+            line-height: 28pt;
+        }
+        
+        .doc-line.no-indent {
+            text-indent: 0;
+        }
+        
+        .doc-line + .doc-line {
+            margin-top: 0;
+        }
+        
+        .doc-signature {
+            text-align: right;
+            margin-top: 112pt;
+            margin-right: 40px;
+        }
+        
+        .doc-date {
+            text-align: right;
+            margin-top: 10pt;
+            margin-right: 40px;
+        }
+        
+        .signature-img {
+            max-width: 150px;
+            max-height: 60px;
+            vertical-align: bottom;
+        }
+        
+        .underline {
+            display: inline-block;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding: 0 1px 3px 1px;
+            margin: 0;
+            vertical-align: baseline;
+        }
+        
+        .underline-full {
+            display: block;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding: 0 4px 3px 4px;
+            margin: 0 2px;
+            margin-left: auto;
+        }
+        
+        .underline-half {
+            display: inline-block;
+            width: calc(50% - 60px);
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding: 0 4px 3px 4px;
+            margin: 0 2px;
+            vertical-align: baseline;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        
+        .info-label {
+            flex-shrink: 0;
+        }
+        
+        .checkbox-checked {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin: 0 4px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='5' fill='%23000'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .checkbox-unchecked {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin: 0 4px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .info-value {
+            flex-grow: 1;
+        }
+        
+        .half-row {
+            display: flex;
+            width: 100%;
+        }
+        
+        .half-row-left {
+            width: 50%;
+            display: inline-block;
+        }
+        
+        .half-row-right {
+            width: 50%;
+            display: inline-block;
+            text-align: left;
+            padding-left: 20px;
+        }
+        
+        .info-item {
+            display: inline-block;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .info-item-full {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        
+        .label-text {
+            display: inline;
+        }
+        
+        .fill-blank {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            text-align: center;
+            vertical-align: bottom;
+            padding: 0 4px;
+        }
+        
+        .fill-blank-half {
+            width: 100px;
+        }
+        
+        .fill-blank-full {
+            width: calc(100% - 150px);
+        }
+        
+        .time-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-wrap: nowrap;
+        }
+        
+        .time-picker-container select {
+            padding: 6px 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            min-width: 50px;
+            -webkit-appearance: none;
+            appearance: none;
+            text-align: center;
+            direction: rtl;
+        }
+        
+        .time-picker-container select option {
+            direction: ltr;
+            text-align: center;
+        }
+        
+        .time-picker-container select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .time-separator {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 1px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.3s;
+        }
+        
+        .step-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .step-dot.completed {
+            background: #4CAF50;
+        }
+        
+        .datetime-inputs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .datetime-inputs input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .datetime-inputs span {
+            line-height: 40px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .form-section, .navigation, .action-buttons, .progress-bar, .step-indicator {
+                display: none !important;
+            }
+            .document-preview {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>有关情况说明</h1>
+            <p>请填写以下信息生成文书</p>
+        </div>
+        
+        <div class="step-indicator">
+            <div class="step-dot active" id="step1"></div>
+            <div class="step-dot" id="step2"></div>
+            <div class="step-dot" id="step3"></div>
+            <div class="step-dot" id="step4"></div>
+            <div class="step-dot" id="step5"></div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+        </div>
+        
+        <!-- 基本信息 -->
+        <div class="form-section" id="section1">
+            <h2 class="section-title">基本信息</h2>
+            
+            <div class="form-group">
+                <label>姓名<span class="required">*</span></label>
+                <input type="text" id="姓名" placeholder="请输入您的真实姓名" required>
+            </div>
+            
+            <div class="form-group">
+                <label>您是船舶所有人吗？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="船舶所有人" value="是"> 是</label>
+                    <label class="radio-item"><input type="radio" name="船舶所有人" value="否"> 否</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>身份证号<span class="required">*</span></label>
+                <input type="text" id="身份证号" placeholder="请输入18位身份证号" maxlength="18">
+            </div>
+            
+            <div class="form-group">
+                <label>手机号<span class="required">*</span></label>
+                <input type="tel" id="手机号" placeholder="请输入11位手机号" maxlength="11">
+            </div>
+            
+            <div class="form-group">
+                <label>联系地址（与身份证保持一致）<span class="required">*</span></label>
+                <textarea id="联系地址" placeholder="请输入详细地址"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>您是否为当班驾驶员？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="当班驾驶员" value="是"> 是</label>
+                    <label class="radio-item"><input type="radio" name="当班驾驶员" value="否"> 否</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>船名<span class="required">*</span></label>
+                <input type="text" id="船名" placeholder="请输入船名">
+            </div>
+            
+            <div class="form-group">
+                <label>职务<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="职务" value="船长"> 船长</label>
+                    <label class="radio-item"><input type="radio" name="职务" value="大副"> 大副</label>
+                    <label class="radio-item"><input type="radio" name="职务" value="二副"> 二副</label>
+                    <label class="radio-item"><input type="radio" name="职务" value="轮机长"> 轮机长</label>
+                    <label class="radio-item"><input type="radio" name="职务" value="大管轮"> 大管轮</label>
+                    <label class="radio-item"><input type="radio" name="职务" value="二管轮"> 二管轮</label>
+                    <label class="radio-item"><input type="radio" name="职务" value="其他"> 其他</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="职务其他Group">
+                <label>请说明具体职务</label>
+                <input type="text" id="职务其他" placeholder="请输入具体职务名称">
+            </div>
+            
+            <div class="form-group">
+                <label>本航次起始港<span class="required">*</span></label>
+                <input type="text" id="起始港" placeholder="请输入起始港">
+            </div>
+            
+            <div class="form-group">
+                <label>本航次目的港<span class="required">*</span></label>
+                <input type="text" id="目的港" placeholder="请输入目的港">
+            </div>
+            
+            <div class="navigation">
+                <div></div>
+                <button class="btn btn-primary" onclick="nextSection(1)">下一步</button>
+            </div>
+        </div>
+        
+        <!-- 违法情况 -->
+        <div class="form-section hidden" id="section2">
+            <h2 class="section-title">违法情况</h2>
+            
+            <div class="form-group">
+                <label>违法时间<span class="required">*</span></label>
+                <div class="time-picker-container">
+                    <select id="违法年"></select><span class="time-separator">年</span>
+                    <select id="违法月"></select><span class="time-separator">月</span>
+                    <select id="违法日"></select><span class="time-separator">日</span>
+                    <select id="违法时"></select><span class="time-separator">:</span>
+                    <select id="违法分"></select><span class="time-separator">时</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>违法发生地点<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="违法地点" value="武汉长江大桥桥区水域"> 武汉长江大桥桥区水域</label>
+                    <label class="radio-item"><input type="radio" name="违法地点" value="武汉长江二桥桥区水域"> 武汉长江二桥桥区水域</label>
+                    <label class="radio-item"><input type="radio" name="违法地点" value="武汉二七大桥"> 武汉二七大桥</label>
+                    <label class="radio-item"><input type="radio" name="违法地点" value="武桥水道"> 武桥水道</label>
+                    <label class="radio-item"><input type="radio" name="违法地点" value="汉口水道"> 汉口水道</label>
+                    <label class="radio-item"><input type="radio" name="违法地点" value="其他" onchange="setupConditionalFields()"> 其他</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="违法地点其他Group">
+                <label>请填写其他违法地点<span class="required">*</span></label>
+                <input type="text" id="违法地点其他" placeholder="请输入其他违法地点">
+            </div>
+            
+            <div class="form-group">
+                <label>违法时是武汉交管中心与您联系的吗？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="交管联系" value="是" onchange="setupConditionalFields()"> 是</label>
+                    <label class="radio-item"><input type="radio" name="交管联系" value="否" onchange="setupConditionalFields()"> 否</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="武桥执法大队Group">
+                <label>是否为武桥执法大队发现？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="武桥执法大队" value="是" onchange="setupConditionalFields()"> 是</label>
+                    <label class="radio-item"><input type="radio" name="武桥执法大队" value="否" onchange="setupConditionalFields()"> 否</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="发现单位其他Group">
+                <label>请填写发现单位<span class="required">*</span></label>
+                <input type="text" id="发现单位其他" placeholder="请输入发现单位名称">
+            </div>
+            
+            <div class="form-group">
+                <label>当时您船处于什么状态？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="船舶状态" value="航行"> 航行</label>
+                    <label class="radio-item"><input type="radio" name="船舶状态" value="停泊"> 停泊</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>违法行为具体表现为什么？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="违法行为" value="桥区追越"> 桥区追越</label>
+                    <label class="radio-item"><input type="radio" name="违法行为" value="未按规定航路航行"> 未按规定航路航行</label>
+                    <label class="radio-item"><input type="radio" name="违法行为" value="其他"> 其他</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="违法行为其他Group">
+                <label>请详细说明违法行为<span class="required">*</span></label>
+                <textarea id="违法行为其他" placeholder="请输入违法行为详细说明"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>违法原因是什么？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="违法原因" value="忘记了"> 忘记了</label>
+                    <label class="radio-item"><input type="radio" name="违法原因" value="对相关规则不熟悉"> 对相关规则不熟悉</label>
+                    <label class="radio-item"><input type="radio" name="违法原因" value="其他原因"> 其他原因</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="违法原因其他Group">
+                <label>请说明具体原因<span class="required">*</span></label>
+                <textarea id="违法原因其他" placeholder="请输入具体原因"></textarea>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevSection(2)">上一步</button>
+                <button class="btn btn-primary" onclick="nextSection(2)">下一步</button>
+            </div>
+        </div>
+        
+        <!-- 权利告知 -->
+        <div class="form-section hidden" id="section3">
+            <h2 class="section-title">权利告知</h2>
+            
+            <div class="form-group">
+                <label>《行政处罚案件权利义务告知书》您是否已阅读？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="权利告知" value="已阅读"> 我已经阅读了</label>
+                    <label class="radio-item"><input type="radio" name="权利告知" value="执法人员已宣读"> 执法人员已经向我宣读了</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>您船是否存在申请海事行政执法人员回避的情形？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="回避情形" value="存在"> 存在</label>
+                    <label class="radio-item"><input type="radio" name="回避情形" value="不存在"> 不存在</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="回避情形具体Group">
+                <label>请说明具体情形<span class="required">*</span></label>
+                <textarea id="回避情形具体" placeholder="请输入具体回避情形"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>您是否需要陈述、申辩？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="陈述申辩" value="需要"> 需要</label>
+                    <label class="radio-item"><input type="radio" name="陈述申辩" value="不需要"> 不需要</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="陈述申辩内容Group">
+                <label>请陈述、申辩内容<span class="required">*</span></label>
+                <textarea id="陈述申辩内容" placeholder="请输入陈述、申辩内容"></textarea>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevSection(3)">上一步</button>
+                <button class="btn btn-primary" onclick="nextSection(3)">下一步</button>
+            </div>
+        </div>
+        
+        <!-- 送达办理 -->
+        <div class="form-section hidden" id="section4">
+            <h2 class="section-title">送达办理</h2>
+            
+            <div class="form-group">
+                <label>您是否通过海事通APP进行办理？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="海事通APP" value="是"> 是</label>
+                    <label class="radio-item"><input type="radio" name="海事通APP" value="否"> 否</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="受委托人Group">
+                <label>您是否为受委托人？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="受委托人" value="是"> 是</label>
+                    <label class="radio-item"><input type="radio" name="受委托人" value="否"> 否</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="送达方式Group">
+                <label>送达方式？<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="送达方式" value="直接送达"> 直接送达</label>
+                    <label class="radio-item"><input type="radio" name="送达方式" value="电子送达"> 电子送达</label>
+                    <label class="radio-item"><input type="radio" name="送达方式" value="其他"> 其他</label>
+                </div>
+            </div>
+            
+            <div class="form-group hidden" id="送达方式OtherGroup">
+                <label>请注明其他送达方式</label>
+                <input type="text" id="送达方式其他" placeholder="请输入其他送达方式">
+            </div>
+            
+            <div class="form-group hidden" id="送达地址Group">
+                <label>送达地址</label>
+                <input type="text" id="送达地址" placeholder="电子送达可不填">
+            </div>
+            
+            <div class="form-group hidden" id="收件人Group">
+                <label>收件人</label>
+                <input type="text" id="收件人" placeholder="电子送达可不填">
+            </div>
+            
+            <div class="form-group hidden" id="送达电话Group">
+                <label>联系电话</label>
+                <input type="text" id="送达电话" placeholder="电子送达可不填">
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevSection(4)">上一步</button>
+                <button class="btn btn-primary" onclick="nextSection(4)">下一步</button>
+            </div>
+        </div>
+        
+        <!-- 签字确认 -->
+        <div class="form-section hidden" id="section5">
+            <h2 class="section-title">签字确认</h2>
+            
+            <div class="form-group">
+                <label>请在下方签字确认<span class="required">*</span></label>
+                <div class="signature-container">
+                    <canvas id="signaturePad" width="400" height="150"></canvas>
+                    <div class="signature-buttons">
+                        <button class="btn btn-secondary" onclick="clearSignature()">清除签名</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevSection(5)">上一步</button>
+                <button class="btn btn-success" onclick="generateDocument()">生成文书</button>
+            </div>
+        </div>
+        
+        <!-- 文书预览 -->
+        <div class="document-preview hidden" id="documentPreview">
+            <div class="doc-title">有关情况说明</div>
+            
+            <div class="doc-line no-indent" id="docInfo1"></div>
+            <div class="doc-line no-indent" id="docInfo2"></div>
+            <div class="doc-line no-indent" id="docInfo3"></div>
+            <div class="doc-line no-indent" id="docInfo4"></div>
+            <div class="doc-line" id="docIntro"></div>
+            <div class="doc-line" id="docItem1"></div>
+            <div class="doc-line" id="docItem2"></div>
+            <div class="doc-line" id="docItem3"></div>
+            <div class="doc-line" id="docConclusion"></div>
+            
+            <div class="doc-signature" id="docSignature"></div>
+            <div class="doc-date" id="docDate"></div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="editForm()">返回修改</button>
+                <button class="btn btn-primary" onclick="copyDocument()">复制文本</button>
+                <button class="btn btn-warning" onclick="downloadImage()">下载图片</button>
+                <button class="btn btn-success" onclick="downloadPDF()">下载PDF</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var isWeChat = /micromessenger/i.test(navigator.userAgent);
+        var isAndroid = /android/i.test(navigator.userAgent);
+        var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        
+        if (isWeChat && isAndroid) {
+            document.body.style.webkitOverflowScrolling = 'touch';
+        }
+        
+        if (isWeChat) {
+            var metaViewport = document.querySelector('meta[name="viewport"]');
+            if (metaViewport) {
+                metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            var canvas = document.getElementById('signaturePad');
+            if (canvas) {
+                try {
+                    var rect = canvas.getBoundingClientRect();
+                    var dpr = window.devicePixelRatio || 1;
+                    canvas.width = rect.width * dpr;
+                    canvas.height = rect.height * dpr;
+                    var ctx = canvas.getContext('2d');
+                    if (ctx) {
+                        ctx.scale(dpr, dpr);
+                    }
+                } catch (e) {
+                    console.error('Canvas initialization failed:', e);
+                }
+            }
+            
+            if (isWeChat && isAndroid) {
+                var inputs = document.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    input.addEventListener('blur', function() {
+                        window.scrollTo(0, 0);
+                    });
+                });
+            }
+        });
+        
+        let currentSection = 1;
+        const totalSections = 5;
+        let signatureData = null;
+        
+        const canvas = document.getElementById('signaturePad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            lastX = e.offsetX;
+            lastY = e.offsetY;
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            lastX = e.offsetX;
+            lastY = e.offsetY;
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            isDrawing = true;
+            lastX = touch.clientX - rect.left;
+            lastY = touch.clientY - rect.top;
+        }
+        
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            lastX = x;
+            lastY = y;
+        }
+        
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            signatureData = null;
+        }
+        
+        function updateProgress() {
+            const progress = (currentSection / totalSections) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            for (let i = 1; i <= totalSections; i++) {
+                const dot = document.getElementById('step' + i);
+                dot.classList.remove('active', 'completed');
+                if (i < currentSection) {
+                    dot.classList.add('completed');
+                } else if (i === currentSection) {
+                    dot.classList.add('active');
+                }
+            }
+        }
+        
+        function showSection(sectionNum) {
+            for (let i = 1; i <= totalSections; i++) {
+                document.getElementById('section' + i).classList.add('hidden');
+            }
+            document.getElementById('section' + sectionNum).classList.remove('hidden');
+            currentSection = sectionNum;
+            updateProgress();
+        }
+        
+        function nextSection(current) {
+            if (current < totalSections) {
+                showSection(current + 1);
+            }
+        }
+        
+        function prevSection(current) {
+            if (current > 1) {
+                showSection(current - 1);
+            }
+        }
+        
+        function getRadioValue(name) {
+            const radios = document.querySelectorAll('input[name="' + name + '"]');
+            for (let i = 0; i < radios.length; i++) {
+                if (radios[i].checked) return radios[i].value;
+            }
+            return '';
+        }
+        
+        function underline(text) {
+            if (!text) return '<span class="underline" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>';
+            return '<span class="underline" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;">' + text + '</span></span>';
+        }
+        
+        function underlineHalf(text) {
+            if (!text) text = '';
+            return '<span class="underline-half">' + text + '</span>';
+        }
+        
+        function underlineFull(text) {
+            if (!text) text = '';
+            return '<span class="underline-full">' + text + '</span>';
+        }
+        
+        function setupConditionalFields() {
+            var radios违法地点 = document.querySelectorAll('input[name="违法地点"]');
+            for (var i = 0; i < radios违法地点.length; i++) {
+                radios违法地点[i].addEventListener('change', function() {
+                    var group = document.getElementById('违法地点其他Group');
+                    if (this.value === '其他') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios职务 = document.querySelectorAll('input[name="职务"]');
+            for (var i = 0; i < radios职务.length; i++) {
+                radios职务[i].addEventListener('change', function() {
+                    var group = document.getElementById('职务其他Group');
+                    if (this.value === '其他') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios交管联系 = document.querySelectorAll('input[name="交管联系"]');
+            for (var i = 0; i < radios交管联系.length; i++) {
+                radios交管联系[i].addEventListener('change', function() {
+                    var group = document.getElementById('武桥执法大队Group');
+                    var otherGroup = document.getElementById('发现单位其他Group');
+                    if (this.value === '否') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                        otherGroup.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios武桥执法大队 = document.querySelectorAll('input[name="武桥执法大队"]');
+            for (var i = 0; i < radios武桥执法大队.length; i++) {
+                radios武桥执法大队[i].addEventListener('change', function() {
+                    var group = document.getElementById('发现单位其他Group');
+                    if (this.value === '否') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios违法行为 = document.querySelectorAll('input[name="违法行为"]');
+            for (var i = 0; i < radios违法行为.length; i++) {
+                radios违法行为[i].addEventListener('change', function() {
+                    var group = document.getElementById('违法行为其他Group');
+                    if (this.value === '其他') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios违法原因 = document.querySelectorAll('input[name="违法原因"]');
+            for (var i = 0; i < radios违法原因.length; i++) {
+                radios违法原因[i].addEventListener('change', function() {
+                    var group = document.getElementById('违法原因其他Group');
+                    if (this.value === '其他原因') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios回避情形 = document.querySelectorAll('input[name="回避情形"]');
+            for (var i = 0; i < radios回避情形.length; i++) {
+                radios回避情形[i].addEventListener('change', function() {
+                    var group = document.getElementById('回避情形具体Group');
+                    if (this.value === '存在') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios陈述申辩 = document.querySelectorAll('input[name="陈述申辩"]');
+            for (var i = 0; i < radios陈述申辩.length; i++) {
+                radios陈述申辩[i].addEventListener('change', function() {
+                    var group = document.getElementById('陈述申辩内容Group');
+                    if (this.value === '需要') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
+            var radios海事通APP = document.querySelectorAll('input[name="海事通APP"]');
+            for (var i = 0; i < radios海事通APP.length; i++) {
+                radios海事通APP[i].addEventListener('change', function() {
+                    var group = document.getElementById('受委托人Group');
+                    if (this.value === '否') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                        document.getElementById('送达方式Group').classList.add('hidden');
+                        hideDeliveryFields();
+                    }
+                });
+            }
+            
+            var radios受委托人 = document.querySelectorAll('input[name="受委托人"]');
+            for (var i = 0; i < radios受委托人.length; i++) {
+                radios受委托人[i].addEventListener('change', function() {
+                    var group = document.getElementById('送达方式Group');
+                    if (this.value === '是') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                        hideDeliveryFields();
+                    }
+                });
+            }
+            
+            var radios送达方式 = document.querySelectorAll('input[name="送达方式"]');
+            for (var i = 0; i < radios送达方式.length; i++) {
+                radios送达方式[i].addEventListener('change', function() {
+                    var show = this.value !== '电子送达';
+                    var otherGroup = document.getElementById('送达方式OtherGroup');
+                    var addrGroup = document.getElementById('送达地址Group');
+                    var nameGroup = document.getElementById('收件人Group');
+                    var phoneGroup = document.getElementById('送达电话Group');
+                    
+                    if (this.value === '其他') {
+                        otherGroup.classList.remove('hidden');
+                    } else {
+                        otherGroup.classList.add('hidden');
+                    }
+                    
+                    if (show) {
+                        addrGroup.classList.remove('hidden');
+                        nameGroup.classList.remove('hidden');
+                        phoneGroup.classList.remove('hidden');
+                    } else {
+                        addrGroup.classList.add('hidden');
+                        nameGroup.classList.add('hidden');
+                        phoneGroup.classList.add('hidden');
+                    }
+                    
+                    if (this.value === '直接送达') {
+                        document.getElementById('送达地址').value = '武汉港区海事处处罚室';
+                    } else {
+                        document.getElementById('送达地址').value = '';
+                    }
+                });
+            }
+        }
+        
+        function hideDeliveryFields() {
+            document.getElementById('送达方式OtherGroup').classList.add('hidden');
+            document.getElementById('送达地址Group').classList.add('hidden');
+            document.getElementById('收件人Group').classList.add('hidden');
+            document.getElementById('送达电话Group').classList.add('hidden');
+        }
+        
+        function getFormData() {
+            var 违法年 = document.getElementById('违法年').value || '____';
+            var 违法月 = document.getElementById('违法月').value || '__';
+            var 违法日 = document.getElementById('违法日').value || '__';
+            var 违法时 = document.getElementById('违法时').value || '__';
+            var 违法分 = document.getElementById('违法分').value || '__';
+            var 违法时间 = 违法年 + '年' + 违法月 + '月' + 违法日 + '日' + 违法时 + ':' + 违法分 + '时';
+            
+            return {
+                姓名: document.getElementById('姓名').value,
+                船舶所有人: getRadioValue('船舶所有人'),
+                身份证号: document.getElementById('身份证号').value,
+                手机号: document.getElementById('手机号').value,
+                联系地址: document.getElementById('联系地址').value,
+                当班驾驶员: getRadioValue('当班驾驶员'),
+                船名: document.getElementById('船名').value,
+                职务: getRadioValue('职务'),
+                职务其他: document.getElementById('职务其他').value,
+                起始港: document.getElementById('起始港').value,
+                目的港: document.getElementById('目的港').value,
+                违法时间: 违法时间,
+                违法地点: getRadioValue('违法地点'),
+                违法地点其他: document.getElementById('违法地点其他').value,
+                交管联系: getRadioValue('交管联系'),
+                武桥执法大队: getRadioValue('武桥执法大队'),
+                发现单位其他: document.getElementById('发现单位其他').value,
+                船舶状态: getRadioValue('船舶状态'),
+                违法行为: getRadioValue('违法行为'),
+                违法行为其他: document.getElementById('违法行为其他').value,
+                违法原因: getRadioValue('违法原因'),
+                违法原因其他: document.getElementById('违法原因其他').value,
+                权利告知: getRadioValue('权利告知'),
+                回避情形: getRadioValue('回避情形'),
+                回避情形具体: document.getElementById('回避情形具体').value,
+                陈述申辩: getRadioValue('陈述申辩'),
+                陈述申辩内容: document.getElementById('陈述申辩内容').value,
+                海事通APP: getRadioValue('海事通APP'),
+                受委托人: getRadioValue('受委托人'),
+                送达方式: getRadioValue('送达方式'),
+                送达方式其他: document.getElementById('送达方式其他').value,
+                送达地址: document.getElementById('送达地址').value,
+                收件人: document.getElementById('收件人').value,
+                送达电话: document.getElementById('送达电话').value
+            };
+        }
+        
+        function generateDocument() {
+            var formData = getFormData();
+            
+            signatureData = canvas.toDataURL();
+            
+            var identity = formData.船舶所有人 === '是' ? '当事人' : '证人';
+            
+            var 职务Text = formData.职务 || '';
+            if (formData.职务 === '其他' && formData.职务其他) {
+                职务Text = formData.职务其他;
+            }
+            
+            var workUnitParts = [];
+            if (formData.船名) workUnitParts.push(formData.船名 + '轮');
+            if (职务Text) workUnitParts.push(职务Text);
+            if (formData.船舶所有人 === '是') workUnitParts.push('船舶所有人');
+            if (formData.当班驾驶员 === '是') workUnitParts.push('当班驾驶员');
+            var workUnit = workUnitParts.join('、');
+            
+            document.getElementById('docInfo1').innerHTML = '<div style="display:flex;width:100%;"><div style="width:50%;">说明人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.姓名 || '') + '</span></span></div><div style="width:50%;">与案件关系：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + identity + '</span></span></div></div>';
+            document.getElementById('docInfo2').innerHTML = '<div style="display:flex;width:100%;"><div style="width:50%;">身份证号：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.身份证号 || '') + '</span></span></div><div style="width:50%;">联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.手机号 || '') + '</span></span></div></div>';
+            document.getElementById('docInfo3').innerHTML = '<div style="display:flex;align-items:baseline;"><span style="flex-shrink:0;">工作单位及职务：</span><span class="underline-full">' + (workUnit || '') + '</span></div>';
+            document.getElementById('docInfo4').innerHTML = '<div style="display:flex;align-items:baseline;"><span style="flex-shrink:0;">联系地址：</span><span class="underline-full">' + (formData.联系地址 || '') + '</span></div>';
+            
+            var 违法行为Text = formData.违法行为 || '';
+            if (formData.违法行为 === '其他' && formData.违法行为其他) {
+                违法行为Text = formData.违法行为其他;
+            }
+            
+            var 违法地点Text = formData.违法地点 || '';
+            if (formData.违法地点 === '其他' && formData.违法地点其他) {
+                违法地点Text = formData.违法地点其他;
+            }
+            
+            var 发现单位 = '';
+            if (formData.交管联系 === '是') {
+                发现单位 = '，' + underline('武汉交管中心') + '发现';
+            } else if (formData.武桥执法大队 === '是') {
+                发现单位 = '，武桥执法大队发现';
+            } else if (formData.武桥执法大队 === '否' && formData.发现单位其他) {
+                发现单位 = '，' + underline(formData.发现单位其他) + '发现';
+            }
+            
+            var intro = '我在' + underline(formData.船名) + '轮上担任' + underline(职务Text) + '职务，本航次由' + underline(formData.起始港) + '港到' + underline(formData.目的港) + '港。' + underline(formData.违法时间) + '在' + underline(违法地点Text) + 发现单位 + '，我船存在' + underline(违法行为Text) + '的违法行为。我当时在场，对当时的情况比较了解，现在有关情况说明如下：';
+            document.getElementById('docIntro').innerHTML = intro;
+            
+            var 船舶状态Checked = formData.船舶状态 === '航行' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 违法属实Checked = '<span class="checkbox-checked"></span>';
+            var 违法属实Unchecked = '<span class="checkbox-unchecked"></span>';
+            
+            var 违法原因Text = '';
+            if (formData.违法原因 === '忘记了') {
+                违法原因Text = '忘记了<span class="checkbox-checked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + underline(formData.违法原因其他);
+            } else if (formData.违法原因 === '对相关规则不熟悉') {
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-checked"></span> 其他原因：' + underline(formData.违法原因其他);
+            } else if (formData.违法原因 === '其他原因') {
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + underline(formData.违法原因其他) + ' <span class="checkbox-checked"></span>';
+            } else {
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + underline('');
+            }
+            
+            var item1 = '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实' + 违法属实Checked + '不属实' + 违法属实Unchecked + '，具体表现为：' + underline(违法行为Text) + '，原因是：' + 违法原因Text + '。';
+            document.getElementById('docItem1').innerHTML = item1;
+            
+            var rightsReadChecked = formData.权利告知 === '已阅读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidChecked = formData.回避情形 === '存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidUnchecked = formData.回避情形 === '不存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseChecked = formData.陈述申辩 === '需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            
+            var avoidDetail = '';
+            if (formData.回避情形 === '存在' && formData.回避情形具体) {
+                avoidDetail = '，具体情形：' + underline(formData.回避情形具体);
+            }
+            
+            var defenseDetail = '';
+            if (formData.陈述申辩 === '需要' && formData.陈述申辩内容) {
+                defenseDetail = '。具体内容：' + underline(formData.陈述申辩内容);
+            }
+            
+            var item2 = '2. 《行政处罚案件权利义务告知书》，我已经阅读了' + rightsReadChecked + '执法人员已经向我宣读了' + rightsReadUnchecked + '，我已经充分了解了相关权利和义务，我船存在' + avoidChecked + '不存在' + avoidUnchecked + '申请海事行政执法人员回避的情形' + avoidDetail + '，需要' + defenseChecked + '不需要' + defenseUnchecked + '陈述、申辩' + defenseDetail + '。';
+            document.getElementById('docItem2').innerHTML = item2;
+            
+            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是' || 
+                                formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                formData.船舶所有人 === '否' && formData.海事通APP === '是' && formData.受委托人 === '是' ||
+                                formData.海事通APP === '是' && formData.受委托人 === '是';
+            var isElectronicDelivery = formData.送达方式 === '电子送达' || 
+                                      formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                      formData.受委托人 === '是' && formData.海事通APP === '是';
+            var isOwnerElectronicDelivery = formData.船舶所有人 === '是' && formData.海事通APP === '是';
+            
+            if (showDelivery) {
+                var deliveryInfo = '';
+                
+                var directChecked = '□';
+                var electronicChecked = '□';
+                var otherChecked = '□';
+                var otherText = '';
+                
+                if (isElectronicDelivery) {
+                    electronicChecked = '☑';
+                } else if (formData.送达方式 === '直接送达') {
+                    directChecked = '☑';
+                } else if (formData.送达方式 === '其他') {
+                    otherChecked = '☑';
+                    otherText = formData.送达方式其他 || '';
+                }
+                
+                var deliveryAddress = '海事通';
+                if (!isElectronicDelivery) {
+                    deliveryAddress = formData.送达地址 || '武汉港区海事处处罚室';
+                }
+                
+                var recipientName = formData.姓名 || '';
+                var recipientPhone = formData.手机号 || '';
+                
+                deliveryInfo = '3.海事行政执法文书送达<br>';
+                deliveryInfo += '&emsp;&emsp;送达方式：直接送达' + directChecked + '电子送达' + electronicChecked + '其它' + otherChecked + (otherText ? '(' + otherText + ')' : '') + '<br>';
+                deliveryInfo += '<div style="display:flex;align-items:baseline;"><span style="flex-shrink:0;">&emsp;&emsp;送达地址：</span><span class="underline-full">' + deliveryAddress + '</span></div>';
+                deliveryInfo += '<div style="display:flex;width:100%;"><div style="width:50%;">&emsp;&emsp;收件人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientName + '</span></span></div><div style="width:50%;">联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientPhone + '</span></span></div></div><br>';
+                deliveryInfo += '&emsp;&emsp;（相关送达信息若有变更将以书面形式告知海事管理机构）';
+                
+                document.getElementById('docItem3').innerHTML = deliveryInfo;
+                document.getElementById('docItem3').classList.remove('hidden');
+            } else {
+                document.getElementById('docItem3').classList.add('hidden');
+            }
+            
+            document.getElementById('docConclusion').textContent = '以上情况说明是出于我真实意思表示，愿意承担相应法律后果。';
+            
+            var signatureHtml = '签字：<img src="' + signatureData + '" class="signature-img" />&emsp;&emsp;&emsp;&emsp;';
+            document.getElementById('docSignature').innerHTML = signatureHtml;
+            
+            var today = new Date();
+            var dateStr = today.getFullYear() + ' 年 ' + (today.getMonth() + 1) + ' 月 ' + today.getDate() + ' 日&emsp;&emsp;&emsp;&emsp;';
+            document.getElementById('docDate').innerHTML = dateStr;
+            
+            for (var i = 1; i <= totalSections; i++) {
+                document.getElementById('section' + i).classList.add('hidden');
+            }
+            document.querySelector('.step-indicator').classList.add('hidden');
+            document.querySelector('.progress-bar').classList.add('hidden');
+            document.getElementById('documentPreview').classList.remove('hidden');
+        }
+        
+        function editForm() {
+            document.getElementById('documentPreview').classList.add('hidden');
+            document.querySelector('.step-indicator').classList.remove('hidden');
+            document.querySelector('.progress-bar').classList.remove('hidden');
+            showSection(1);
+        }
+        
+        function copyDocument() {
+            var formData = getFormData();
+            var identity = formData.船舶所有人 === '是' ? '当事人' : '证人';
+            
+            var 职务Text = formData.职务 || '';
+            if (formData.职务 === '其他' && formData.职务其他) {
+                职务Text = formData.职务其他;
+            }
+            
+            var workUnitParts = [];
+            if (formData.船名) workUnitParts.push(formData.船名 + '轮');
+            if (职务Text) workUnitParts.push(职务Text);
+            if (formData.船舶所有人 === '是') workUnitParts.push('船舶所有人');
+            if (formData.当班驾驶员 === '是') workUnitParts.push('当班驾驶员');
+            var workUnit = workUnitParts.join('、');
+            
+            var 违法行为Text = formData.违法行为 || '';
+            if (formData.违法行为 === '其他' && formData.违法行为其他) {
+                违法行为Text = formData.违法行为其他;
+            }
+            
+            var 违法地点Text = formData.违法地点 || '';
+            if (formData.违法地点 === '其他' && formData.违法地点其他) {
+                违法地点Text = formData.违法地点其他;
+            }
+            
+            var 发现单位Text = '';
+            if (formData.交管联系 === '是') {
+                发现单位Text = '，武汉交管中心发现';
+            } else if (formData.武桥执法大队 === '是') {
+                发现单位Text = '，武桥执法大队发现';
+            } else if (formData.武桥执法大队 === '否' && formData.发现单位其他) {
+                发现单位Text = '，' + formData.发现单位其他 + '发现';
+            }
+            
+            var 船舶状态Checked = formData.船舶状态 === '航行' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 违法属实Checked = '<span class="checkbox-checked"></span>';
+            var 违法属实Unchecked = '<span class="checkbox-unchecked"></span>';
+            
+            var 违法原因Text = '';
+            if (formData.违法原因 === '忘记了') {
+                违法原因Text = '忘记了<span class="checkbox-checked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + (formData.违法原因其他 || '');
+            } else if (formData.违法原因 === '对相关规则不熟悉') {
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-checked"></span> 其他原因：' + (formData.违法原因其他 || '');
+            } else if (formData.违法原因 === '其他原因') {
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + (formData.违法原因其他 || '') + ' <span class="checkbox-checked"></span>';
+            }
+            
+            var rightsReadChecked = formData.权利告知 === '已阅读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidChecked = formData.回避情形 === '存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidUnchecked = formData.回避情形 === '不存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseChecked = formData.陈述申辩 === '需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            
+            var avoidDetail = formData.回避情形 === '存在' && formData.回避情形具体 ? '，具体情形：' + formData.回避情形具体 : '';
+            var defenseDetail = formData.陈述申辩 === '需要' && formData.陈述申辩内容 ? '。具体内容：' + formData.陈述申辩内容 : '';
+            
+            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是' || 
+                                formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                formData.船舶所有人 === '否' && formData.海事通APP === '是' && formData.受委托人 === '是' ||
+                                formData.海事通APP === '是' && formData.受委托人 === '是';
+            var deliverySection = '';
+            if (showDelivery) {
+                var 送达方式Text = formData.送达方式 || '';
+                var isElectronicDelivery = formData.送达方式 === '电子送达' || 
+                                              formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                              formData.受委托人 === '是' && formData.海事通APP === '是';
+                if (formData.送达方式 === '其他' && formData.送达方式其他) {
+                    送达方式Text = formData.送达方式其他;
+                }
+                deliverySection = '\n\n3. 送达方式：' + 送达方式Text;
+                if (!isElectronicDelivery) {
+                    deliverySection += '，送达地址：' + (formData.送达地址 || '武汉港区海事处处罚室') + '，收件人：' + (formData.收件人 || formData.姓名 || '') + '，联系电话：' + (formData.送达电话 || formData.手机号 || '');
+                }
+            }
+            
+            var today = new Date();
+            var dateStr = today.getFullYear() + ' 年 ' + (today.getMonth() + 1) + ' 月 ' + today.getDate() + ' 日';
+            
+            var doc = '有关情况说明\n\n' +
+                '说明人：' + (formData.姓名 || '______') + '                    与案件关系：' + identity + '\n\n' +
+                '身份证号：' + (formData.身份证号 || '______') + '                    联系电话：' + (formData.手机号 || '______') + '\n\n' +
+                '工作单位及职务：' + workUnit + '\n\n' +
+                '联系地址：' + (formData.联系地址 || '______') + '\n\n' +
+                '我在' + (formData.船名 || '______') + '轮上担任' + 职务Text + '职务，本航次由' + (formData.起始港 || '______') + '港到' + (formData.目的港 || '______') + '港。' + (formData.违法时间 || '______') + '在' + 违法地点Text + 发现单位Text + '，我船存在' + 违法行为Text + '的违法行为。我当时在场，对当时的情况比较了解，现在有关情况说明如下：\n\n' +
+                '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实' + 违法属实Checked + '不属实' + 违法属实Unchecked + '，具体表现为：' + 违法行为Text + '，原因是：' + 违法原因Text + '。\n\n' +
+                '2. 《行政处罚案件权利义务告知书》，我已经阅读了' + rightsReadChecked + '执法人员已经向我宣读了' + rightsReadUnchecked + '，我已经充分了解了相关权利和义务，我船存在' + avoidChecked + '不存在' + avoidUnchecked + '申请海事行政执法人员回避的情形' + avoidDetail + '，需要' + defenseChecked + '不需要' + defenseUnchecked + '陈述、申辩' + defenseDetail + '。' + deliverySection + '\n\n' +
+                '以上情况说明是出于我真实意思表示，愿意承担相应法律后果。\n\n\n' +
+                '                                        签字：________________\n' +
+                '                                        ' + dateStr + '\n';
+            
+            navigator.clipboard.writeText(doc).then(function() {
+                alert('文书内容已复制到剪贴板！');
+            }).catch(function() {
+                var textarea = document.createElement('textarea');
+                textarea.value = doc;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('文书内容已复制到剪贴板！');
+            });
+        }
+        
+        function downloadImage() {
+            var element = document.getElementById('documentPreview');
+            var buttons = element.querySelector('.action-buttons');
+            buttons.style.display = 'none';
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(function(canvas) {
+                try {
+                    var link = document.createElement('a');
+                    link.download = '有关情况说明_' + new Date().getTime() + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    
+                    var userAgent = navigator.userAgent.toLowerCase();
+                    var isAndroid = userAgent.indexOf('android') > -1;
+                    
+                    if (isAndroid) {
+                        var event = new MouseEvent('click', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        link.dispatchEvent(event);
+                    } else {
+                        link.click();
+                    }
+                    
+                    setTimeout(function() {
+                        buttons.style.display = 'flex';
+                    }, 500);
+                } catch (err) {
+                    alert('生成图片失败：' + err.message);
+                    buttons.style.display = 'flex';
+                }
+            }).catch(function(err) {
+                alert('生成图片失败：' + err.message);
+                buttons.style.display = 'flex';
+            });
+        }
+        
+        function downloadPDF() {
+            var element = document.getElementById('documentPreview');
+            var buttons = element.querySelector('.action-buttons');
+            buttons.style.display = 'none';
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(function(canvas) {
+                try {
+                    var imgData = canvas.toDataURL('image/png');
+                    var imgWidth = 210;
+                    var pageHeight = 297;
+                    var imgHeight = canvas.height * imgWidth / canvas.width;
+                    
+                    var doc;
+                    if (typeof jspdf !== 'undefined' && jspdf.jsPDF) {
+                        doc = new jspdf.jsPDF('p', 'mm', 'a4');
+                    } else if (typeof jsPDF !== 'undefined') {
+                        doc = new jsPDF('p', 'mm', 'a4');
+                    } else {
+                        alert('PDF库未加载，请刷新页面重试');
+                        buttons.style.display = 'flex';
+                        return;
+                    }
+                    
+                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    
+                    var userAgent = navigator.userAgent.toLowerCase();
+                    var isAndroid = userAgent.indexOf('android') > -1;
+                    
+                    if (isAndroid) {
+                        doc.save('有关情况说明_' + new Date().getTime() + '.pdf');
+                        setTimeout(function() {
+                            buttons.style.display = 'flex';
+                        }, 1000);
+                    } else {
+                        doc.save('有关情况说明_' + new Date().getTime() + '.pdf');
+                        setTimeout(function() {
+                            buttons.style.display = 'flex';
+                        }, 500);
+                    }
+                } catch (err) {
+                    alert('生成PDF失败：' + err.message);
+                    buttons.style.display = 'flex';
+                }
+            }).catch(function(err) {
+                alert('生成PDF失败：' + err.message);
+                buttons.style.display = 'flex';
+            });
+        }
+        
+        function initTimePickers() {
+            var yearSelect = document.getElementById('违法年');
+            var monthSelect = document.getElementById('违法月');
+            var daySelect = document.getElementById('违法日');
+            var hourSelect = document.getElementById('违法时');
+            var minuteSelect = document.getElementById('违法分');
+            
+            var currentYear = new Date().getFullYear();
+            for (var y = currentYear - 5; y <= currentYear + 1; y++) {
+                var opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                if (y === currentYear) opt.selected = true;
+                yearSelect.appendChild(opt);
+            }
+            
+            for (var m = 1; m <= 12; m++) {
+                var opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                monthSelect.appendChild(opt);
+            }
+            
+            for (var d = 1; d <= 31; d++) {
+                var opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                daySelect.appendChild(opt);
+            }
+            
+            for (var h = 0; h <= 23; h++) {
+                var opt = document.createElement('option');
+                opt.value = h < 10 ? '0' + h : h;
+                opt.textContent = h < 10 ? '0' + h : h;
+                hourSelect.appendChild(opt);
+            }
+            
+            for (var min = 0; min <= 59; min++) {
+                var opt = document.createElement('option');
+                opt.value = min < 10 ? '0' + min : min;
+                opt.textContent = min < 10 ? '0' + min : min;
+                minuteSelect.appendChild(opt);
+            }
+        }
+        
+        setupConditionalFields();
+        initTimePickers();
+        updateProgress();
+    </script>
+</body>
+</html>
