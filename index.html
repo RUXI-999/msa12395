@@ -3,180 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>有关情况说明</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>有关情况说明 - 表单测试</title>
+    <script src="libs/html2canvas.min.js"></script>
+    <script src="libs/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         
-        @media screen and (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .container {
-                padding: 0;
-            }
-            
-            .form-section {
-                padding: 15px;
-                margin-bottom: 15px;
-                border-radius: 8px;
-            }
-            
-            .header h1 {
-                font-size: 20px;
-            }
-            
-            .section-title {
-                font-size: 16px;
-            }
-            
-            .document-preview {
-                padding: 15px;
-                font-size: 14pt;
-                width: 100%;
-                min-height: auto;
-                line-height: 24pt;
-            }
-            
-            .doc-title {
-                font-size: 18pt;
-                margin-bottom: 12pt;
-                line-height: 24pt;
-            }
-            
-            .doc-line {
-                text-indent: 2em;
-                line-height: 24pt;
-            }
-            
-            .doc-signature {
-                margin-top: 40pt;
-                line-height: 24pt;
-            }
-            
-            .doc-date {
-                line-height: 24pt;
-            }
-            
-            .underline-half {
-                min-width: 3em;
-            }
-            
-            .underline-full {
-                min-width: 6em;
-            }
-            
-            .underline, .underline-half, .underline-full {
-                padding: 0 2px;
-            }
-            
-            .btn {
-                padding: 12px 16px;
-                font-size: 14px;
-            }
-            
-            .navigation {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .navigation .btn {
-                width: 100%;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .action-buttons .btn {
-                width: 100%;
-            }
-            
-            .radio-group {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .time-picker-container {
-                flex-wrap: wrap;
-            }
-            
-            .time-picker-container select {
-                flex: 1;
-                min-width: 60px;
-            }
-            
-            .underline-half {
-                min-width: 60px;
-            }
-            
-            .underline-full {
-                min-width: 120px;
-            }
-            
-            .underline {
-                min-width: 50px;
-            }
-            
-            .half-row {
-                flex-direction: column;
-            }
-            
-            .half-row-left, .half-row-right {
-                width: 100%;
-                padding-left: 0;
-                margin-bottom: 8px;
-            }
-            
-            .info-item {
-                width: 100%;
-                margin-bottom: 8px;
-            }
-            
-            .signature-img {
-                max-width: 100px;
-                max-height: 40px;
-            }
-            
-            .pdf-preview {
-                padding: 10px;
-            }
-            
-            .pdf-header {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .pdf-actions {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .pdf-container {
-                padding: 10px;
-            }
-            
-            .pdf-container iframe {
-                min-height: 300px;
-                max-width: 100%;
-            }
+        input, textarea, select {
+            -webkit-user-select: text;
+            user-select: text;
         }
         
         body {
-            font-family: 'Microsoft YaHei', 'SimSun', sans-serif;
+            font-family: 'Microsoft YaHei', 'SimSun', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         .container {
@@ -247,6 +104,7 @@
         
         .form-group input[type="text"],
         .form-group input[type="tel"],
+        .form-group input[type="number"],
         .form-group textarea,
         .form-group select {
             width: 100%;
@@ -255,6 +113,9 @@
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
         }
         
         .form-group input:focus,
@@ -286,6 +147,29 @@
             width: 18px;
             height: 18px;
             cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .radio-item input[type="radio"]:checked {
+            background: #667eea;
+            border-color: #667eea;
+        }
+        
+        .radio-item input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
         }
         
         .signature-container {
@@ -293,50 +177,6 @@
             border-radius: 8px;
             padding: 10px;
             text-align: center;
-            width: 100%;
-            position: relative;
-        }
-        
-        .signature-fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #fff;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        
-        .signature-fullscreen.hidden {
-            display: none;
-        }
-        
-        .signature-fullscreen canvas {
-            width: 95vw !important;
-            height: 60vh !important;
-            max-width: 800px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: #fff;
-        }
-        
-        .signature-fullscreen-buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .signature-fullscreen-buttons .btn {
-            padding: 15px 30px;
-            font-size: 16px;
         }
         
         #signaturePad {
@@ -345,15 +185,6 @@
             background: #fafafa;
             cursor: crosshair;
             touch-action: none;
-            width: 100% !important;
-            height: 200px !important;
-            max-width: 100%;
-        }
-        
-        @media screen and (max-width: 768px) {
-            #signaturePad {
-                height: 120px !important;
-            }
         }
         
         .signature-buttons {
@@ -426,31 +257,25 @@
         
         .document-preview {
             background: white;
-            border-radius: 0;
+            border-radius: 12px;
             padding: 37mm 26mm 35mm 28mm;
-            box-shadow: none;
-            font-family: 'FangSong', 'STFangsong', '仿宋', 'SimFang', 'FangSong_GB2312', serif;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: 'FangSong', 'STFangsong', '仿宋', serif;
             font-size: 16pt;
             line-height: 28pt;
             text-align: justify;
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            box-sizing: border-box;
         }
         
         .doc-title {
             text-align: center;
-            font-family: 'SimSun', '宋体', 'STSong', serif;
+            font-family: 'SimSun', '宋体', serif;
             font-size: 22pt;
-            font-weight: normal;
-            margin-bottom: 16pt;
-            line-height: 28pt;
+            font-weight: bold;
+            margin-bottom: 30pt;
         }
         
         .doc-line {
-            margin: 0;
-            padding: 0;
+            margin-bottom: 0;
             text-indent: 2em;
             text-align: justify;
             line-height: 28pt;
@@ -460,120 +285,94 @@
             text-indent: 0;
         }
         
+        .doc-line + .doc-line {
+            margin-top: 0;
+        }
+        
         .doc-signature {
             text-align: right;
-            margin-top: 56pt;
-            padding-right: 0;
-            line-height: 28pt;
+            margin-top: 112pt;
+            margin-right: 40px;
         }
         
         .doc-date {
             text-align: right;
-            margin-top: 0;
-            padding-right: 0;
-            line-height: 28pt;
+            margin-top: 10pt;
+            margin-right: 40px;
         }
         
         .signature-img {
-            max-width: 100px;
-            max-height: 40px;
+            max-width: 150px;
+            max-height: 60px;
             vertical-align: bottom;
-            margin-left: 1em;
         }
         
         .underline {
-            display: inline;
+            display: inline-block;
+            text-align: center;
             border-bottom: 1px solid #000;
-            padding: 0 2px;
+            padding: 0 1px 3px 1px;
             margin: 0;
-        }
-        
-        .underline-half {
-            display: inline;
-            border-bottom: 1px solid #000;
-            padding: 0 4px;
-            margin: 0;
+            vertical-align: baseline;
         }
         
         .underline-full {
-            display: inline;
+            display: block;
+            width: 100%;
+            text-align: center;
             border-bottom: 1px solid #000;
-            padding: 0 4px;
-            margin: 0;
+            padding: 0 4px 3px 4px;
+            margin: 0 2px;
+            margin-left: auto;
+        }
+        
+        .underline-half {
+            display: inline-block;
+            width: calc(50% - 60px);
+            text-align: center;
+            border-bottom: 1px solid #000;
+            padding: 0 4px 3px 4px;
+            margin: 0 2px;
+            vertical-align: baseline;
         }
         
         .info-row {
-            margin: 0;
-            padding: 0;
-            line-height: 28pt;
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+            width: 100%;
         }
         
-        .checkbox {
+        .info-label {
+            flex-shrink: 0;
+        }
+        
+        .checkbox-checked {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 1px solid #000;
+            width: 16px;
+            height: 16px;
             vertical-align: middle;
-            margin: 0 1px;
+            margin: 0 4px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23000' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='5' fill='%23000'/%3E%3C/svg%3E");
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
         }
         
-        .checkbox.checked {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-width='3' d='M4 12l5 5L20 5'/%3E%3C/svg%3E");
+        .checkbox-unchecked {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin: 0 4px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
         
-        .pdf-preview {
-            background: #f5f5f5;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        
-        .pdf-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .pdf-header h3 {
-            margin: 0;
-            font-size: 18px;
-            color: #333;
-        }
-        
-        .pdf-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .pdf-container {
-            background: #fff;
-            border-radius: 8px;
-            overflow: auto;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px;
-            max-height: 80vh;
-        }
-        
-        .pdf-container img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #eee;
-        }
-        
-        .pdf-container iframe {
-            width: 100%;
-            max-width: 210mm;
-            height: 80vh;
-            border: none;
+        .info-value {
+            flex-grow: 1;
         }
         
         .half-row {
@@ -640,6 +439,15 @@
             background: white;
             cursor: pointer;
             min-width: 50px;
+            -webkit-appearance: none;
+            appearance: none;
+            text-align: center;
+            direction: rtl;
+        }
+        
+        .time-picker-container select option {
+            direction: ltr;
+            text-align: center;
         }
         
         .time-picker-container select:focus {
@@ -839,7 +647,13 @@
                     <label class="radio-item"><input type="radio" name="违法地点" value="武汉二七大桥"> 武汉二七大桥</label>
                     <label class="radio-item"><input type="radio" name="违法地点" value="武桥水道"> 武桥水道</label>
                     <label class="radio-item"><input type="radio" name="违法地点" value="汉口水道"> 汉口水道</label>
+                    <label class="radio-item"><input type="radio" name="违法地点" value="其他" onchange="setupConditionalFields()"> 其他</label>
                 </div>
+            </div>
+            
+            <div class="form-group hidden" id="违法地点其他Group">
+                <label>请填写其他违法地点<span class="required">*</span></label>
+                <input type="text" id="违法地点其他" placeholder="请输入其他违法地点">
             </div>
             
             <div class="form-group">
@@ -1011,10 +825,9 @@
             <div class="form-group">
                 <label>请在下方签字确认<span class="required">*</span></label>
                 <div class="signature-container">
-                    <canvas id="signaturePad" width="400" height="200"></canvas>
+                    <canvas id="signaturePad" width="400" height="150"></canvas>
                     <div class="signature-buttons">
                         <button class="btn btn-secondary" onclick="clearSignature()">清除签名</button>
-                        <button class="btn btn-primary" onclick="openFullscreenSignature()">放大签字</button>
                     </div>
                 </div>
             </div>
@@ -1022,16 +835,6 @@
             <div class="navigation">
                 <button class="btn btn-secondary" onclick="prevSection(5)">上一步</button>
                 <button class="btn btn-success" onclick="generateDocument()">生成文书</button>
-            </div>
-        </div>
-        
-        <!-- 全屏签字 -->
-        <div class="signature-fullscreen hidden" id="fullscreenSignature">
-            <h3 style="margin-bottom: 20px; font-size: 18px;">请在下方横屏签字</h3>
-            <canvas id="signaturePadFullscreen" width="800" height="400"></canvas>
-            <div class="signature-fullscreen-buttons">
-                <button class="btn btn-secondary" onclick="clearFullscreenSignature()">清除签名</button>
-                <button class="btn btn-success" onclick="confirmFullscreenSignature()">确认签字</button>
             </div>
         </div>
         
@@ -1043,7 +846,6 @@
             <div class="doc-line no-indent" id="docInfo2"></div>
             <div class="doc-line no-indent" id="docInfo3"></div>
             <div class="doc-line no-indent" id="docInfo4"></div>
-            <div class="doc-line no-indent" id="docInfo5"></div>
             <div class="doc-line" id="docIntro"></div>
             <div class="doc-line" id="docItem1"></div>
             <div class="doc-line" id="docItem2"></div>
@@ -1052,92 +854,97 @@
             
             <div class="doc-signature" id="docSignature"></div>
             <div class="doc-date" id="docDate"></div>
-        </div>
-        
-        <!-- PDF预览 -->
-        <div class="pdf-preview hidden" id="pdfPreview">
-            <div class="pdf-header">
-                <h3>文书预览</h3>
-                <div class="pdf-actions">
-                    <button class="btn btn-secondary" onclick="editForm()">返回修改</button>
-                    <button class="btn btn-warning" onclick="downloadImage()">下载图片</button>
-                    <button class="btn btn-success" onclick="downloadPDF()">下载PDF</button>
-                </div>
-            </div>
-            <div class="pdf-container" id="pdfContainer">
-                <img id="previewImage" src="" alt="文书预览" />
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="editForm()">返回修改</button>
+                <button class="btn btn-primary" onclick="copyDocument()">复制文本</button>
+                <button class="btn btn-warning" onclick="downloadImage()">下载图片</button>
+                <button class="btn btn-success" onclick="downloadPDF()">下载PDF</button>
             </div>
         </div>
     </div>
     
     <script>
+        var isWeChat = /micromessenger/i.test(navigator.userAgent);
+        var isAndroid = /android/i.test(navigator.userAgent);
+        var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        
+        if (isWeChat && isAndroid) {
+            document.body.style.webkitOverflowScrolling = 'touch';
+        }
+        
+        if (isWeChat) {
+            var metaViewport = document.querySelector('meta[name="viewport"]');
+            if (metaViewport) {
+                metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            var canvas = document.getElementById('signaturePad');
+            if (canvas) {
+                try {
+                    var rect = canvas.getBoundingClientRect();
+                    var dpr = window.devicePixelRatio || 1;
+                    canvas.width = rect.width * dpr;
+                    canvas.height = rect.height * dpr;
+                    var ctx = canvas.getContext('2d');
+                    if (ctx) {
+                        ctx.scale(dpr, dpr);
+                    }
+                } catch (e) {
+                    console.error('Canvas initialization failed:', e);
+                }
+            }
+            
+            if (isWeChat && isAndroid) {
+                var inputs = document.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    input.addEventListener('blur', function() {
+                        window.scrollTo(0, 0);
+                    });
+                });
+            }
+        });
+        
         let currentSection = 1;
         const totalSections = 5;
         let signatureData = null;
-        let canvas = null;
-        let ctx = null;
+        
+        const canvas = document.getElementById('signaturePad');
+        const ctx = canvas.getContext('2d');
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
         
-        function initSignaturePad() {
-            canvas = document.getElementById('signaturePad');
-            if (!canvas) return;
-            
-            ctx = canvas.getContext('2d');
-            
-            var container = canvas.parentElement;
-            canvas.width = container.offsetWidth - 20;
-            canvas.height = 150;
-            
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
-            
-            canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-            canvas.addEventListener('touchend', stopDrawing);
-        }
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         
-        window.addEventListener('load', initSignaturePad);
-        window.addEventListener('resize', function() {
-            if (canvas && ctx) {
-                var container = canvas.parentElement;
-                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                canvas.width = container.offsetWidth - 20;
-                canvas.height = 150;
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 2;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.putImageData(imageData, 0, 0);
-            }
-        });
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
         
         function startDrawing(e) {
             isDrawing = true;
-            var rect = canvas.getBoundingClientRect();
-            lastX = e.clientX - rect.left;
-            lastY = e.clientY - rect.top;
+            lastX = e.offsetX;
+            lastY = e.offsetY;
         }
         
         function draw(e) {
             if (!isDrawing) return;
-            var rect = canvas.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var y = e.clientY - rect.top;
             ctx.beginPath();
             ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
+            ctx.lineTo(e.offsetX, e.offsetY);
             ctx.stroke();
-            lastX = x;
-            lastY = y;
+            lastX = e.offsetX;
+            lastY = e.offsetY;
         }
         
         function stopDrawing() {
@@ -1169,97 +976,8 @@
         }
         
         function clearSignature() {
-            if (ctx && canvas) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             signatureData = null;
-        }
-        
-        var fullscreenCanvas, fullscreenCtx;
-        var isDrawingFullscreen = false;
-        var lastXFullscreen = 0, lastYFullscreen = 0;
-        
-        function openFullscreenSignature() {
-            document.getElementById('fullscreenSignature').classList.remove('hidden');
-            fullscreenCanvas = document.getElementById('signaturePadFullscreen');
-            fullscreenCtx = fullscreenCanvas.getContext('2d');
-            fullscreenCtx.strokeStyle = '#000';
-            fullscreenCtx.lineWidth = 3;
-            fullscreenCtx.lineCap = 'round';
-            fullscreenCtx.lineJoin = 'round';
-            
-            fullscreenCanvas.addEventListener('mousedown', startDrawingFullscreen);
-            fullscreenCanvas.addEventListener('mousemove', drawFullscreen);
-            fullscreenCanvas.addEventListener('mouseup', stopDrawingFullscreen);
-            fullscreenCanvas.addEventListener('mouseout', stopDrawingFullscreen);
-            fullscreenCanvas.addEventListener('touchstart', handleTouchStartFullscreen);
-            fullscreenCanvas.addEventListener('touchmove', handleTouchMoveFullscreen);
-            fullscreenCanvas.addEventListener('touchend', stopDrawingFullscreen);
-        }
-        
-        function startDrawingFullscreen(e) {
-            isDrawingFullscreen = true;
-            var rect = fullscreenCanvas.getBoundingClientRect();
-            lastXFullscreen = (e.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
-            lastYFullscreen = (e.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
-        }
-        
-        function drawFullscreen(e) {
-            if (!isDrawingFullscreen) return;
-            var rect = fullscreenCanvas.getBoundingClientRect();
-            var x = (e.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
-            var y = (e.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
-            fullscreenCtx.beginPath();
-            fullscreenCtx.moveTo(lastXFullscreen, lastYFullscreen);
-            fullscreenCtx.lineTo(x, y);
-            fullscreenCtx.stroke();
-            lastXFullscreen = x;
-            lastYFullscreen = y;
-        }
-        
-        function stopDrawingFullscreen() {
-            isDrawingFullscreen = false;
-        }
-        
-        function handleTouchStartFullscreen(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = fullscreenCanvas.getBoundingClientRect();
-            isDrawingFullscreen = true;
-            lastXFullscreen = (touch.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
-            lastYFullscreen = (touch.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
-        }
-        
-        function handleTouchMoveFullscreen(e) {
-            e.preventDefault();
-            if (!isDrawingFullscreen) return;
-            const touch = e.touches[0];
-            const rect = fullscreenCanvas.getBoundingClientRect();
-            const x = (touch.clientX - rect.left) * (fullscreenCanvas.width / rect.width);
-            const y = (touch.clientY - rect.top) * (fullscreenCanvas.height / rect.height);
-            fullscreenCtx.beginPath();
-            fullscreenCtx.moveTo(lastXFullscreen, lastYFullscreen);
-            fullscreenCtx.lineTo(x, y);
-            fullscreenCtx.stroke();
-            lastXFullscreen = x;
-            lastYFullscreen = y;
-        }
-        
-        function clearFullscreenSignature() {
-            if (fullscreenCtx && fullscreenCanvas) {
-                fullscreenCtx.clearRect(0, 0, fullscreenCanvas.width, fullscreenCanvas.height);
-            }
-        }
-        
-        function confirmFullscreenSignature() {
-            signatureData = fullscreenCanvas.toDataURL();
-            var img = new Image();
-            img.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            };
-            img.src = signatureData;
-            document.getElementById('fullscreenSignature').classList.add('hidden');
         }
         
         function updateProgress() {
@@ -1307,8 +1025,8 @@
         }
         
         function underline(text) {
-            if (!text) text = '';
-            return '<span class="underline">' + text + '</span>';
+            if (!text) return '<span class="underline" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>';
+            return '<span class="underline" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;">' + text + '</span></span>';
         }
         
         function underlineHalf(text) {
@@ -1322,6 +1040,18 @@
         }
         
         function setupConditionalFields() {
+            var radios违法地点 = document.querySelectorAll('input[name="违法地点"]');
+            for (var i = 0; i < radios违法地点.length; i++) {
+                radios违法地点[i].addEventListener('change', function() {
+                    var group = document.getElementById('违法地点其他Group');
+                    if (this.value === '其他') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            }
+            
             var radios职务 = document.querySelectorAll('input[name="职务"]');
             for (var i = 0; i < radios职务.length; i++) {
                 radios职务[i].addEventListener('change', function() {
@@ -1498,6 +1228,7 @@
                 目的港: document.getElementById('目的港').value,
                 违法时间: 违法时间,
                 违法地点: getRadioValue('违法地点'),
+                违法地点其他: document.getElementById('违法地点其他').value,
                 交管联系: getRadioValue('交管联系'),
                 武桥执法大队: getRadioValue('武桥执法大队'),
                 发现单位其他: document.getElementById('发现单位其他').value,
@@ -1540,15 +1271,19 @@
             if (formData.当班驾驶员 === '是') workUnitParts.push('当班驾驶员');
             var workUnit = workUnitParts.join('、');
             
-            document.getElementById('docInfo1').innerHTML = '说明人：' + underlineHalf(formData.姓名 || '') + '与案件关系：' + underlineHalf(identity);
-            document.getElementById('docInfo2').innerHTML = '身份证号：' + underlineFull(formData.身份证号 || '');
-            document.getElementById('docInfo3').innerHTML = '联系电话：' + underlineFull(formData.手机号 || '');
-            document.getElementById('docInfo4').innerHTML = '工作单位及职务：' + underlineFull(workUnit || '');
-            document.getElementById('docInfo5').innerHTML = '联系地址：' + underlineFull(formData.联系地址 || '');
+            document.getElementById('docInfo1').innerHTML = '<div style="display:flex;width:100%;"><div style="width:50%;">说明人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.姓名 || '') + '</span></span></div><div style="width:50%;">与案件关系：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + identity + '</span></span></div></div>';
+            document.getElementById('docInfo2').innerHTML = '<div style="display:flex;width:100%;"><div style="width:50%;">身份证号：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.身份证号 || '') + '</span></span></div><div style="width:50%;">联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + (formData.手机号 || '') + '</span></span></div></div>';
+            document.getElementById('docInfo3').innerHTML = '<div style="display:flex;align-items:baseline;"><span style="flex-shrink:0;">工作单位及职务：</span><span class="underline-full">' + (workUnit || '') + '</span></div>';
+            document.getElementById('docInfo4').innerHTML = '<div style="display:flex;align-items:baseline;"><span style="flex-shrink:0;">联系地址：</span><span class="underline-full">' + (formData.联系地址 || '') + '</span></div>';
             
             var 违法行为Text = formData.违法行为 || '';
             if (formData.违法行为 === '其他' && formData.违法行为其他) {
                 违法行为Text = formData.违法行为其他;
+            }
+            
+            var 违法地点Text = formData.违法地点 || '';
+            if (formData.违法地点 === '其他' && formData.违法地点其他) {
+                违法地点Text = formData.违法地点其他;
             }
             
             var 发现单位 = '';
@@ -1560,32 +1295,34 @@
                 发现单位 = '，' + underline(formData.发现单位其他) + '发现';
             }
             
-            var intro = '我在' + underline(formData.船名) + '轮上担任' + underline(职务Text) + '职务，本航次由' + underline(formData.起始港) + '港到' + underline(formData.目的港) + '港。' + underline(formData.违法时间) + '在' + underline(formData.违法地点) + 发现单位 + '，我船存在' + underline(违法行为Text) + '的违法行为。我当时在场，对当时的情况比较了解，现在有关情况说明如下：';
+            var intro = '我在' + underline(formData.船名) + '轮上担任' + underline(职务Text) + '职务，本航次由' + underline(formData.起始港) + '港到' + underline(formData.目的港) + '港。' + underline(formData.违法时间) + '在' + underline(违法地点Text) + 发现单位 + '，我船存在' + underline(违法行为Text) + '的违法行为。我当时在场，对当时的情况比较了解，现在有关情况说明如下：';
             document.getElementById('docIntro').innerHTML = intro;
             
-            var 船舶状态Checked = formData.船舶状态 === '航行' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
-            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var 船舶状态Checked = formData.船舶状态 === '航行' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 违法属实Checked = '<span class="checkbox-checked"></span>';
+            var 违法属实Unchecked = '<span class="checkbox-unchecked"></span>';
             
             var 违法原因Text = '';
             if (formData.违法原因 === '忘记了') {
-                违法原因Text = '忘记了<span class="checkbox checked"></span>对相关规则不熟悉<span class="checkbox"></span>其他原因：' + underline(formData.违法原因其他 || '');
+                违法原因Text = '忘记了<span class="checkbox-checked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + underline(formData.违法原因其他);
             } else if (formData.违法原因 === '对相关规则不熟悉') {
-                违法原因Text = '忘记了<span class="checkbox"></span>对相关规则不熟悉<span class="checkbox checked"></span>其他原因：' + underline(formData.违法原因其他 || '');
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-checked"></span> 其他原因：' + underline(formData.违法原因其他);
             } else if (formData.违法原因 === '其他原因') {
-                违法原因Text = '忘记了<span class="checkbox"></span>对相关规则不熟悉<span class="checkbox"></span>其他原因：' + underline(formData.违法原因其他 || '') + '<span class="checkbox checked"></span>';
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + underline(formData.违法原因其他) + ' <span class="checkbox-checked"></span>';
             } else {
-                违法原因Text = '忘记了<span class="checkbox"></span>对相关规则不熟悉<span class="checkbox"></span>其他原因：' + underline('');
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + underline('');
             }
             
-            var item1 = '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实<span class="checkbox checked"></span>不属实<span class="checkbox"></span>，具体表现为：' + underline(违法行为Text) + '，原因是：' + 违法原因Text + '。';
+            var item1 = '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实' + 违法属实Checked + '不属实' + 违法属实Unchecked + '，具体表现为：' + underline(违法行为Text) + '，原因是：' + 违法原因Text + '。';
             document.getElementById('docItem1').innerHTML = item1;
             
-            var rightsReadChecked = formData.权利告知 === '已阅读' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
-            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
-            var avoidChecked = formData.回避情形 === '存在' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
-            var avoidUnchecked = formData.回避情形 === '不存在' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
-            var defenseChecked = formData.陈述申辩 === '需要' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
-            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '<span class="checkbox checked"></span>' : '<span class="checkbox"></span>';
+            var rightsReadChecked = formData.权利告知 === '已阅读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidChecked = formData.回避情形 === '存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidUnchecked = formData.回避情形 === '不存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseChecked = formData.陈述申辩 === '需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
             
             var avoidDetail = '';
             if (formData.回避情形 === '存在' && formData.回避情形具体) {
@@ -1600,29 +1337,34 @@
             var item2 = '2. 《行政处罚案件权利义务告知书》，我已经阅读了' + rightsReadChecked + '执法人员已经向我宣读了' + rightsReadUnchecked + '，我已经充分了解了相关权利和义务，我船存在' + avoidChecked + '不存在' + avoidUnchecked + '申请海事行政执法人员回避的情形' + avoidDetail + '，需要' + defenseChecked + '不需要' + defenseUnchecked + '陈述、申辩' + defenseDetail + '。';
             document.getElementById('docItem2').innerHTML = item2;
             
-            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是';
-            var isElectronicDelivery = formData.送达方式 === '电子送达';
+            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是' || 
+                                formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                formData.船舶所有人 === '否' && formData.海事通APP === '是' && formData.受委托人 === '是' ||
+                                formData.海事通APP === '是' && formData.受委托人 === '是';
+            var isElectronicDelivery = formData.送达方式 === '电子送达' || 
+                                      formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                      formData.受委托人 === '是' && formData.海事通APP === '是';
             var isOwnerElectronicDelivery = formData.船舶所有人 === '是' && formData.海事通APP === '是';
             
-            if (showDelivery || isOwnerElectronicDelivery) {
+            if (showDelivery) {
                 var deliveryInfo = '';
                 
-                var directChecked = '<span class="checkbox"></span>';
-                var electronicChecked = '<span class="checkbox"></span>';
-                var otherChecked = '<span class="checkbox"></span>';
+                var directChecked = '□';
+                var electronicChecked = '□';
+                var otherChecked = '□';
                 var otherText = '';
                 
-                if (isOwnerElectronicDelivery || isElectronicDelivery) {
-                    electronicChecked = '<span class="checkbox checked"></span>';
+                if (isElectronicDelivery) {
+                    electronicChecked = '☑';
                 } else if (formData.送达方式 === '直接送达') {
-                    directChecked = '<span class="checkbox checked"></span>';
+                    directChecked = '☑';
                 } else if (formData.送达方式 === '其他') {
-                    otherChecked = '<span class="checkbox checked"></span>';
+                    otherChecked = '☑';
                     otherText = formData.送达方式其他 || '';
                 }
                 
                 var deliveryAddress = '海事通';
-                if (!isOwnerElectronicDelivery && !isElectronicDelivery) {
+                if (!isElectronicDelivery) {
                     deliveryAddress = formData.送达地址 || '武汉港区海事处处罚室';
                 }
                 
@@ -1630,10 +1372,10 @@
                 var recipientPhone = formData.手机号 || '';
                 
                 deliveryInfo = '3.海事行政执法文书送达<br>';
-                deliveryInfo += '送达方式：直接送达' + directChecked + '电子送达' + electronicChecked + '其它' + otherChecked + (otherText ? '(' + otherText + ')' : '') + '<br>';
-                deliveryInfo += '送达地址：' + underlineFull(deliveryAddress) + '<br>';
-                deliveryInfo += '收件人：' + underlineHalf(recipientName) + '联系电话：' + underlineHalf(recipientPhone) + '<br>';
-                deliveryInfo += '（相关送达信息若有变更将以书面形式告知海事管理机构）';
+                deliveryInfo += '&emsp;&emsp;送达方式：直接送达' + directChecked + '电子送达' + electronicChecked + '其它' + otherChecked + (otherText ? '(' + otherText + ')' : '') + '<br>';
+                deliveryInfo += '<div style="display:flex;align-items:baseline;"><span style="flex-shrink:0;">&emsp;&emsp;送达地址：</span><span class="underline-full">' + deliveryAddress + '</span></div>';
+                deliveryInfo += '<div style="display:flex;width:100%;"><div style="width:50%;">&emsp;&emsp;收件人：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientName + '</span></span></div><div style="width:50%;">联系电话：<span class="underline-half" style="display:inline-flex;align-items:flex-end;"><span style="text-align:center;width:100%;">' + recipientPhone + '</span></span></div></div><br>';
+                deliveryInfo += '&emsp;&emsp;（相关送达信息若有变更将以书面形式告知海事管理机构）';
                 
                 document.getElementById('docItem3').innerHTML = deliveryInfo;
                 document.getElementById('docItem3').classList.remove('hidden');
@@ -1643,11 +1385,11 @@
             
             document.getElementById('docConclusion').textContent = '以上情况说明是出于我真实意思表示，愿意承担相应法律后果。';
             
-            var signatureHtml = '签字：<img src="' + signatureData + '" class="signature-img" />';
+            var signatureHtml = '签字：<img src="' + signatureData + '" class="signature-img" />&emsp;&emsp;&emsp;&emsp;';
             document.getElementById('docSignature').innerHTML = signatureHtml;
             
             var today = new Date();
-            var dateStr = today.getFullYear() + ' 年 ' + (today.getMonth() + 1) + ' 月 ' + today.getDate() + ' 日';
+            var dateStr = today.getFullYear() + ' 年 ' + (today.getMonth() + 1) + ' 月 ' + today.getDate() + ' 日&emsp;&emsp;&emsp;&emsp;';
             document.getElementById('docDate').innerHTML = dateStr;
             
             for (var i = 1; i <= totalSections; i++) {
@@ -1655,61 +1397,11 @@
             }
             document.querySelector('.step-indicator').classList.add('hidden');
             document.querySelector('.progress-bar').classList.add('hidden');
-            
-            generatePDFPreview();
-        }
-        
-        function generatePDFPreview() {
-            var jsPDFClass = null;
-            if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
-                jsPDFClass = window.jspdf.jsPDF;
-            } else if (typeof jsPDF !== 'undefined') {
-                jsPDFClass = jsPDF;
-            }
-            
-            if (typeof html2canvas === 'undefined' || !jsPDFClass) {
-                document.getElementById('documentPreview').classList.remove('hidden');
-                document.getElementById('pdfPreview').classList.add('hidden');
-                setTimeout(generatePDFPreview, 500);
-                return;
-            }
-            
-            var element = document.getElementById('documentPreview');
-            element.classList.remove('hidden');
-            
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                width: element.offsetWidth,
-                height: element.offsetHeight
-            }).then(function(canvas) {
-                var imgData = canvas.toDataURL('image/png', 1.0);
-                
-                document.getElementById('previewImage').src = imgData;
-                
-                var imgWidth = 210;
-                var imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
-                var doc = new jsPDFClass('p', 'mm', 'a4');
-                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                
-                window.currentPdfDoc = doc;
-                window.currentCanvas = canvas;
-                
-                document.getElementById('documentPreview').classList.add('hidden');
-                document.getElementById('pdfPreview').classList.remove('hidden');
-            }).catch(function(err) {
-                console.error(err);
-                document.getElementById('documentPreview').classList.remove('hidden');
-                document.getElementById('pdfPreview').classList.add('hidden');
-            });
+            document.getElementById('documentPreview').classList.remove('hidden');
         }
         
         function editForm() {
             document.getElementById('documentPreview').classList.add('hidden');
-            document.getElementById('pdfPreview').classList.add('hidden');
             document.querySelector('.step-indicator').classList.remove('hidden');
             document.querySelector('.progress-bar').classList.remove('hidden');
             showSection(1);
@@ -1736,6 +1428,11 @@
                 违法行为Text = formData.违法行为其他;
             }
             
+            var 违法地点Text = formData.违法地点 || '';
+            if (formData.违法地点 === '其他' && formData.违法地点其他) {
+                违法地点Text = formData.违法地点其他;
+            }
+            
             var 发现单位Text = '';
             if (formData.交管联系 === '是') {
                 发现单位Text = '，武汉交管中心发现';
@@ -1745,37 +1442,45 @@
                 发现单位Text = '，' + formData.发现单位其他 + '发现';
             }
             
-            var 船舶状态Checked = formData.船舶状态 === '航行' ? '☑' : '□';
-            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '☑' : '□';
+            var 船舶状态Checked = formData.船舶状态 === '航行' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 船舶状态Unchecked = formData.船舶状态 === '停泊' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var 违法属实Checked = '<span class="checkbox-checked"></span>';
+            var 违法属实Unchecked = '<span class="checkbox-unchecked"></span>';
             
             var 违法原因Text = '';
             if (formData.违法原因 === '忘记了') {
-                违法原因Text = '忘记了☑ 对相关规则不熟悉□ 其他原因：' + (formData.违法原因其他 || '');
+                违法原因Text = '忘记了<span class="checkbox-checked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + (formData.违法原因其他 || '');
             } else if (formData.违法原因 === '对相关规则不熟悉') {
-                违法原因Text = '忘记了□ 对相关规则不熟悉☑ 其他原因：' + (formData.违法原因其他 || '');
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-checked"></span> 其他原因：' + (formData.违法原因其他 || '');
             } else if (formData.违法原因 === '其他原因') {
-                违法原因Text = '忘记了□ 对相关规则不熟悉□ 其他原因：' + (formData.违法原因其他 || '') + ' ☑';
+                违法原因Text = '忘记了<span class="checkbox-unchecked"></span> 对相关规则不熟悉<span class="checkbox-unchecked"></span> 其他原因：' + (formData.违法原因其他 || '') + ' <span class="checkbox-checked"></span>';
             }
             
-            var rightsReadChecked = formData.权利告知 === '已阅读' ? '☑' : '□';
-            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '☑' : '□';
-            var avoidChecked = formData.回避情形 === '存在' ? '☑' : '□';
-            var avoidUnchecked = formData.回避情形 === '不存在' ? '☑' : '□';
-            var defenseChecked = formData.陈述申辩 === '需要' ? '☑' : '□';
-            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '☑' : '□';
+            var rightsReadChecked = formData.权利告知 === '已阅读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var rightsReadUnchecked = formData.权利告知 === '执法人员已宣读' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidChecked = formData.回避情形 === '存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var avoidUnchecked = formData.回避情形 === '不存在' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseChecked = formData.陈述申辩 === '需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
+            var defenseUnchecked = formData.陈述申辩 === '不需要' ? '<span class="checkbox-checked"></span>' : '<span class="checkbox-unchecked"></span>';
             
             var avoidDetail = formData.回避情形 === '存在' && formData.回避情形具体 ? '，具体情形：' + formData.回避情形具体 : '';
             var defenseDetail = formData.陈述申辩 === '需要' && formData.陈述申辩内容 ? '。具体内容：' + formData.陈述申辩内容 : '';
             
-            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是';
+            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是' || 
+                                formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                formData.船舶所有人 === '否' && formData.海事通APP === '是' && formData.受委托人 === '是' ||
+                                formData.海事通APP === '是' && formData.受委托人 === '是';
             var deliverySection = '';
             if (showDelivery) {
                 var 送达方式Text = formData.送达方式 || '';
+                var isElectronicDelivery = formData.送达方式 === '电子送达' || 
+                                              formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
+                                              formData.受委托人 === '是' && formData.海事通APP === '是';
                 if (formData.送达方式 === '其他' && formData.送达方式其他) {
                     送达方式Text = formData.送达方式其他;
                 }
                 deliverySection = '\n\n3. 送达方式：' + 送达方式Text;
-                if (formData.送达方式 !== '电子送达') {
+                if (!isElectronicDelivery) {
                     deliverySection += '，送达地址：' + (formData.送达地址 || '武汉港区海事处处罚室') + '，收件人：' + (formData.收件人 || formData.姓名 || '') + '，联系电话：' + (formData.送达电话 || formData.手机号 || '');
                 }
             }
@@ -1788,8 +1493,8 @@
                 '身份证号：' + (formData.身份证号 || '______') + '                    联系电话：' + (formData.手机号 || '______') + '\n\n' +
                 '工作单位及职务：' + workUnit + '\n\n' +
                 '联系地址：' + (formData.联系地址 || '______') + '\n\n' +
-                '我在' + (formData.船名 || '______') + '轮上担任' + 职务Text + '职务，本航次由' + (formData.起始港 || '______') + '港到' + (formData.目的港 || '______') + '港。' + (formData.违法时间 || '______') + '在' + (formData.违法地点 || '______') + 发现单位Text + '，我船存在' + 违法行为Text + '的违法行为。我当时在场，对当时的情况比较了解，现在有关情况说明如下：\n\n' +
-                '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实☑不属实□，具体表现为：' + 违法行为Text + '，原因是：' + 违法原因Text + '。\n\n' +
+                '我在' + (formData.船名 || '______') + '轮上担任' + 职务Text + '职务，本航次由' + (formData.起始港 || '______') + '港到' + (formData.目的港 || '______') + '港。' + (formData.违法时间 || '______') + '在' + 违法地点Text + 发现单位Text + '，我船存在' + 违法行为Text + '的违法行为。我当时在场，对当时的情况比较了解，现在有关情况说明如下：\n\n' +
+                '1. 当时我船处于航行' + 船舶状态Checked + '停泊' + 船舶状态Unchecked + '状态，执法人员检查发现的我船违法行为属实' + 违法属实Checked + '不属实' + 违法属实Unchecked + '，具体表现为：' + 违法行为Text + '，原因是：' + 违法原因Text + '。\n\n' +
                 '2. 《行政处罚案件权利义务告知书》，我已经阅读了' + rightsReadChecked + '执法人员已经向我宣读了' + rightsReadUnchecked + '，我已经充分了解了相关权利和义务，我船存在' + avoidChecked + '不存在' + avoidUnchecked + '申请海事行政执法人员回避的情形' + avoidDetail + '，需要' + defenseChecked + '不需要' + defenseUnchecked + '陈述、申辩' + defenseDetail + '。' + deliverySection + '\n\n' +
                 '以上情况说明是出于我真实意思表示，愿意承担相应法律后果。\n\n\n' +
                 '                                        签字：________________\n' +
@@ -1809,24 +1514,98 @@
         }
         
         function downloadImage() {
-            if (window.currentCanvas) {
-                var link = document.createElement('a');
-                link.download = '有关情况说明_' + new Date().getTime() + '.png';
-                link.href = window.currentCanvas.toDataURL('image/png', 1.0);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else {
-                alert('图片正在生成中，请稍后再试');
-            }
+            var element = document.getElementById('documentPreview');
+            var buttons = element.querySelector('.action-buttons');
+            buttons.style.display = 'none';
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(function(canvas) {
+                try {
+                    var link = document.createElement('a');
+                    link.download = '有关情况说明_' + new Date().getTime() + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    
+                    var userAgent = navigator.userAgent.toLowerCase();
+                    var isAndroid = userAgent.indexOf('android') > -1;
+                    
+                    if (isAndroid) {
+                        var event = new MouseEvent('click', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        link.dispatchEvent(event);
+                    } else {
+                        link.click();
+                    }
+                    
+                    setTimeout(function() {
+                        buttons.style.display = 'flex';
+                    }, 500);
+                } catch (err) {
+                    alert('生成图片失败：' + err.message);
+                    buttons.style.display = 'flex';
+                }
+            }).catch(function(err) {
+                alert('生成图片失败：' + err.message);
+                buttons.style.display = 'flex';
+            });
         }
         
         function downloadPDF() {
-            if (window.currentPdfDoc) {
-                window.currentPdfDoc.save('有关情况说明_' + new Date().getTime() + '.pdf');
-            } else {
-                alert('PDF正在生成中，请稍后再试');
-            }
+            var element = document.getElementById('documentPreview');
+            var buttons = element.querySelector('.action-buttons');
+            buttons.style.display = 'none';
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(function(canvas) {
+                try {
+                    var imgData = canvas.toDataURL('image/png');
+                    var imgWidth = 210;
+                    var pageHeight = 297;
+                    var imgHeight = canvas.height * imgWidth / canvas.width;
+                    
+                    var doc;
+                    if (typeof jspdf !== 'undefined' && jspdf.jsPDF) {
+                        doc = new jspdf.jsPDF('p', 'mm', 'a4');
+                    } else if (typeof jsPDF !== 'undefined') {
+                        doc = new jsPDF('p', 'mm', 'a4');
+                    } else {
+                        alert('PDF库未加载，请刷新页面重试');
+                        buttons.style.display = 'flex';
+                        return;
+                    }
+                    
+                    doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    
+                    var userAgent = navigator.userAgent.toLowerCase();
+                    var isAndroid = userAgent.indexOf('android') > -1;
+                    
+                    if (isAndroid) {
+                        doc.save('有关情况说明_' + new Date().getTime() + '.pdf');
+                        setTimeout(function() {
+                            buttons.style.display = 'flex';
+                        }, 1000);
+                    } else {
+                        doc.save('有关情况说明_' + new Date().getTime() + '.pdf');
+                        setTimeout(function() {
+                            buttons.style.display = 'flex';
+                        }, 500);
+                    }
+                } catch (err) {
+                    alert('生成PDF失败：' + err.message);
+                    buttons.style.display = 'flex';
+                }
+            }).catch(function(err) {
+                alert('生成PDF失败：' + err.message);
+                buttons.style.display = 'flex';
+            });
         }
         
         function initTimePickers() {
