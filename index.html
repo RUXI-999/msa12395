@@ -1208,15 +1208,39 @@
                 });
             }
             
+            var radios船舶所有人 = document.querySelectorAll('input[name="船舶所有人"]');
+            for (var i = 0; i < radios船舶所有人.length; i++) {
+                radios船舶所有人[i].addEventListener('change', function() {
+                    var group = document.getElementById('受委托人Group');
+                    var deliveryGroup = document.getElementById('送达方式Group');
+                    if (this.value === '否') {
+                        var 海事通Value = getRadioValue('海事通APP');
+                        if (海事通Value === '是') {
+                            group.classList.remove('hidden');
+                        } else {
+                            group.classList.add('hidden');
+                            deliveryGroup.classList.add('hidden');
+                            hideDeliveryFields();
+                        }
+                    } else {
+                        group.classList.add('hidden');
+                        deliveryGroup.classList.add('hidden');
+                        hideDeliveryFields();
+                    }
+                });
+            }
+            
             var radios海事通APP = document.querySelectorAll('input[name="海事通APP"]');
             for (var i = 0; i < radios海事通APP.length; i++) {
                 radios海事通APP[i].addEventListener('change', function() {
                     var group = document.getElementById('受委托人Group');
-                    if (this.value === '否') {
+                    var deliveryGroup = document.getElementById('送达方式Group');
+                    var 船舶所有人Value = getRadioValue('船舶所有人');
+                    if (船舶所有人Value === '否' && this.value === '是') {
                         group.classList.remove('hidden');
                     } else {
                         group.classList.add('hidden');
-                        document.getElementById('送达方式Group').classList.add('hidden');
+                        deliveryGroup.classList.add('hidden');
                         hideDeliveryFields();
                     }
                 });
