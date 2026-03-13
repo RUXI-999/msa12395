@@ -1213,17 +1213,21 @@
                 radios船舶所有人[i].addEventListener('change', function() {
                     var group = document.getElementById('受委托人Group');
                     var deliveryGroup = document.getElementById('送达方式Group');
-                    if (this.value === '否') {
-                        var 海事通Value = getRadioValue('海事通APP');
+                    var 海事通Value = getRadioValue('海事通APP');
+                    
+                    if (this.value === '是') {
+                        group.classList.add('hidden');
+                        if (海事通Value === '是') {
+                            deliveryGroup.classList.add('hidden');
+                        } else {
+                            deliveryGroup.classList.remove('hidden');
+                        }
+                    } else {
                         if (海事通Value === '是') {
                             group.classList.remove('hidden');
                         } else {
-                            group.classList.add('hidden');
-                            deliveryGroup.classList.add('hidden');
-                            hideDeliveryFields();
+                            group.classList.remove('hidden');
                         }
-                    } else {
-                        group.classList.add('hidden');
                         deliveryGroup.classList.add('hidden');
                         hideDeliveryFields();
                     }
@@ -1236,10 +1240,20 @@
                     var group = document.getElementById('受委托人Group');
                     var deliveryGroup = document.getElementById('送达方式Group');
                     var 船舶所有人Value = getRadioValue('船舶所有人');
-                    if (船舶所有人Value === '否' && this.value === '是') {
-                        group.classList.remove('hidden');
-                    } else {
+                    
+                    if (船舶所有人Value === '是') {
                         group.classList.add('hidden');
+                        if (this.value === '是') {
+                            deliveryGroup.classList.add('hidden');
+                        } else {
+                            deliveryGroup.classList.remove('hidden');
+                        }
+                    } else {
+                        if (this.value === '是') {
+                            group.classList.remove('hidden');
+                        } else {
+                            group.classList.remove('hidden');
+                        }
                         deliveryGroup.classList.add('hidden');
                         hideDeliveryFields();
                     }
@@ -1250,8 +1264,14 @@
             for (var i = 0; i < radios受委托人.length; i++) {
                 radios受委托人[i].addEventListener('change', function() {
                     var group = document.getElementById('送达方式Group');
+                    var 海事通Value = getRadioValue('海事通APP');
+                    
                     if (this.value === '是') {
-                        group.classList.remove('hidden');
+                        if (海事通Value === '是') {
+                            group.classList.add('hidden');
+                        } else {
+                            group.classList.remove('hidden');
+                        }
                     } else {
                         group.classList.add('hidden');
                         hideDeliveryFields();
@@ -1431,14 +1451,31 @@
             var item2 = '2. 《行政处罚案件权利义务告知书》，我已经阅读了' + rightsReadChecked + '执法人员已经向我宣读了' + rightsReadUnchecked + '，我已经充分了解了相关权利和义务，我船存在' + avoidChecked + '不存在' + avoidUnchecked + '申请海事行政执法人员回避的情形' + avoidDetail + '，需要' + defenseChecked + '不需要' + defenseUnchecked + '陈述、申辩' + defenseDetail + '。';
             document.getElementById('docItem2').innerHTML = item2;
             
-            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是' || 
-                                formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
-                                formData.船舶所有人 === '否' && formData.海事通APP === '是' && formData.受委托人 === '是' ||
-                                formData.海事通APP === '是' && formData.受委托人 === '是';
-            var isElectronicDelivery = formData.送达方式 === '电子送达' || 
-                                      formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
-                                      formData.受委托人 === '是' && formData.海事通APP === '是';
-            var isOwnerElectronicDelivery = formData.船舶所有人 === '是' && formData.海事通APP === '是';
+            var showDelivery;
+            var isElectronicDelivery;
+            
+            if (formData.船舶所有人 === '是') {
+                if (formData.海事通APP === '是') {
+                    showDelivery = true;
+                    isElectronicDelivery = true;
+                } else {
+                    showDelivery = true;
+                    isElectronicDelivery = formData.送达方式 === '电子送达';
+                }
+            } else {
+                if (formData.受委托人 === '是') {
+                    if (formData.海事通APP === '是') {
+                        showDelivery = true;
+                        isElectronicDelivery = true;
+                    } else {
+                        showDelivery = true;
+                        isElectronicDelivery = formData.送达方式 === '电子送达';
+                    }
+                } else {
+                    showDelivery = false;
+                    isElectronicDelivery = false;
+                }
+            }
             
             if (showDelivery) {
                 var deliveryInfo = '';
@@ -1560,16 +1597,35 @@
             var avoidDetail = formData.回避情形 === '存在' && formData.回避情形具体 ? '，具体情形：' + formData.回避情形具体 : '';
             var defenseDetail = formData.陈述申辩 === '需要' && formData.陈述申辩内容 ? '。具体内容：' + formData.陈述申辩内容 : '';
             
-            var showDelivery = formData.海事通APP === '否' && formData.受委托人 === '是' || 
-                                formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
-                                formData.船舶所有人 === '否' && formData.海事通APP === '是' && formData.受委托人 === '是' ||
-                                formData.海事通APP === '是' && formData.受委托人 === '是';
+            var showDelivery;
+            var isElectronicDelivery;
+            
+            if (formData.船舶所有人 === '是') {
+                if (formData.海事通APP === '是') {
+                    showDelivery = true;
+                    isElectronicDelivery = true;
+                } else {
+                    showDelivery = true;
+                    isElectronicDelivery = formData.送达方式 === '电子送达';
+                }
+            } else {
+                if (formData.受委托人 === '是') {
+                    if (formData.海事通APP === '是') {
+                        showDelivery = true;
+                        isElectronicDelivery = true;
+                    } else {
+                        showDelivery = true;
+                        isElectronicDelivery = formData.送达方式 === '电子送达';
+                    }
+                } else {
+                    showDelivery = false;
+                    isElectronicDelivery = false;
+                }
+            }
+            
             var deliverySection = '';
             if (showDelivery) {
                 var 送达方式Text = formData.送达方式 || '';
-                var isElectronicDelivery = formData.送达方式 === '电子送达' || 
-                                              formData.船舶所有人 === '是' && formData.海事通APP === '是' || 
-                                              formData.受委托人 === '是' && formData.海事通APP === '是';
                 if (formData.送达方式 === '其他' && formData.送达方式其他) {
                     送达方式Text = formData.送达方式其他;
                 }
